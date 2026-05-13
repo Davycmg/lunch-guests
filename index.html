@@ -408,37 +408,38 @@
 // ── 設定 ──────────────────────────────────────
 const LOCAL_KEY  = 'lunch-guests-v2';
 const GAS_KEY    = 'lunch-gas-url';
+const HARDCODED_GAS_URL = 'https://script.google.com/macros/s/AKfycbxkc7ixGzBxrE5Mo90oELhquakCbSQXlV6SEwemMlYcpCtF-Py5C9_9clyyKnxpYxK2uQ/exec';
 
 const DEFAULT_GUESTS = [
-  {name:"大衛",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"彥漢8872",status:"待確認", bento:0, note:"8872值班", phone:"0920-856-700"},
-  {name:"秀華",    status:"待確認", bento:0, note:"張淑惠 關崇仁 林湛", phone:""},
-  {name:"麗文8815",status:"待確認", bento:0, note:"8815 璊莉 4511", phone:""},
-  {name:"雅雯4997",status:"待確認", bento:0, note:"", phone:""},
-  {name:"豪雷",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"天維",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"銓興哥",  status:"待確認", bento:0, note:"", phone:""},
-  {name:"關崇仁",  status:"待確認", bento:0, note:"", phone:""},
-  {name:"林湛",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"吉昇",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"莊敬",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"美玲",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"佳頤",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"守愚",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"冠禎",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"欣美姐",  status:"待確認", bento:0, note:"", phone:""},
-  {name:"宗諺",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"懿恬",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"閔翔",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"俊維",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"家銘",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"鴻華",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"世德",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"士斌",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"政宏",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"Cindy姐", status:"待確認", bento:0, note:"", phone:""},
-  {name:"淑慧",    status:"待確認", bento:0, note:"", phone:""},
-  {name:"黎大哥",  status:"待確認", bento:0, note:"", phone:""},
+  {name:"彥漢8872",status:"出席",   bento:1, note:"脆皮雞",                   phone:"0920-856-700"},
+  {name:"秀華",    status:"出席",   bento:1, note:"張淑惠 關崇仁 林湛",        phone:""},
+  {name:"雅雯4997",status:"出席",   bento:1, note:"海南雞",                   phone:""},
+  {name:"豪雷",    status:"出席",   bento:1, note:"",                         phone:""},
+  {name:"天維",    status:"出席",   bento:1, note:"",                         phone:""},
+  {name:"銓興哥",  status:"出席",   bento:0, note:"",                         phone:""},
+  {name:"林湛",    status:"出席",   bento:0, note:"",                         phone:""},
+  {name:"關崇仁",  status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"吉昇",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"莊敬",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"美玲",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"佳頤",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"冠禎",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"宗諺",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"懿恬",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"閔翔",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"鴻華",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"政宏",    status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"黎大哥",  status:"待確認", bento:0, note:"",                         phone:""},
+  {name:"大衛",    status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"麗文8815",status:"缺席",   bento:0, note:"8815 璊莉 4511 軟網四月中",phone:""},
+  {name:"守愚",    status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"欣美姐",  status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"俊維",    status:"缺席",   bento:0, note:"隔週值班",                 phone:""},
+  {name:"家銘",    status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"世德",    status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"士斌",    status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"Cindy姐", status:"缺席",   bento:0, note:"",                         phone:""},
+  {name:"淑慧",    status:"缺席",   bento:0, note:"",                         phone:""},
 ];
 
 // ── 狀態 ──────────────────────────────────────
@@ -447,22 +448,33 @@ let curFilter = 'all';
 let gasUrl = '';
 
 function init() {
-  gasUrl = localStorage.getItem(GAS_KEY) || '';
+  gasUrl = localStorage.getItem(GAS_KEY) || HARDCODED_GAS_URL;
   if (gasUrl) {
     document.getElementById('gas-url').value = gasUrl;
-    setSyncStatus('ok', '已設定雲端');
+    // 有設定網址就自動從雲端載入
+    syncFromSheet(true);
+  } else {
+    try {
+      const saved = localStorage.getItem(LOCAL_KEY);
+      guests = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+    } catch(e) {
+      guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+    }
+    render();
   }
-  try {
-    const saved = localStorage.getItem(LOCAL_KEY);
-    guests = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_GUESTS));
-  } catch(e) {
-    guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS));
-  }
-  render();
 }
 
 function saveLocal() {
   try { localStorage.setItem(LOCAL_KEY, JSON.stringify(guests)); } catch(e) {}
+}
+
+// 自動同步：修改後 1.5 秒內沒有再改，就自動存到雲端
+let autoSyncTimer = null;
+function scheduleAutoSync() {
+  if (!gasUrl) return;
+  clearTimeout(autoSyncTimer);
+  setSyncStatus('ing', '等待同步...');
+  autoSyncTimer = setTimeout(() => syncToSheet(true), 1500);
 }
 
 function saveGasUrl() {
@@ -486,8 +498,8 @@ function setSyncStatus(type, msg) {
   el.textContent = msg;
 }
 
-async function syncFromSheet() {
-  if (!gasUrl) { showToast('請先設定 GAS 網址（點標題⚙）'); return; }
+async function syncFromSheet(silent = false) {
+  if (!gasUrl) { if (!silent) showToast('請先設定 GAS 網址（點標題⚙）'); return; }
   setSyncStatus('ing', '載入中...');
   try {
     const res = await fetch(gasUrl + '?action=read');
@@ -496,21 +508,33 @@ async function syncFromSheet() {
       guests = data.guests;
       saveLocal();
       render();
-      setSyncStatus('ok', '✓ 已從雲端載入');
-      showToast(`載入成功，共 ${guests.length} 人`);
+      setSyncStatus('ok', '✓ 已同步');
+      if (!silent) showToast(`載入成功，共 ${guests.length} 人`);
     } else {
+      // 雲端無資料，用本機
+      try {
+        const saved = localStorage.getItem(LOCAL_KEY);
+        guests = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+      } catch(e) { guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS)); }
+      render();
       setSyncStatus('ok', '雲端無資料');
-      showToast('雲端目前沒有資料，使用本機版本');
+      if (!silent) showToast('雲端目前沒有資料，使用本機版本');
     }
   } catch(e) {
-    setSyncStatus('err', '載入失敗');
-    showToast('載入失敗，請確認 GAS 網址是否正確');
+    // 載入失敗，用本機
+    try {
+      const saved = localStorage.getItem(LOCAL_KEY);
+      guests = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+    } catch(e2) { guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS)); }
+    render();
+    setSyncStatus('err', '同步失敗');
+    if (!silent) showToast('載入失敗，請確認 GAS 網址是否正確');
   }
 }
 
-async function syncToSheet() {
-  if (!gasUrl) { showToast('請先設定 GAS 網址（點標題⚙）'); return; }
-  setSyncStatus('ing', '儲存中...');
+async function syncToSheet(silent = false) {
+  if (!gasUrl) { if (!silent) showToast('請先設定 GAS 網址（點標題⚙）'); return; }
+  setSyncStatus('ing', '同步中...');
   try {
     const res = await fetch(gasUrl, {
       method: 'POST',
@@ -519,14 +543,14 @@ async function syncToSheet() {
     });
     const data = await res.json();
     if (data.ok) {
-      setSyncStatus('ok', `✓ 已儲存 ${data.count} 人`);
-      showToast(`已儲存到 Google Sheets（${data.count} 人）`);
+      setSyncStatus('ok', `✓ 已同步`);
+      if (!silent) showToast(`已儲存到 Google Sheets（${data.count} 人）`);
     } else {
       throw new Error(data.error);
     }
   } catch(e) {
-    setSyncStatus('err', '儲存失敗');
-    showToast('儲存失敗：' + e.message);
+    setSyncStatus('err', '同步失敗');
+    if (!silent) showToast('儲存失敗：' + e.message);
   }
 }
 
@@ -544,12 +568,14 @@ function cycleStatus(i) {
   if (guests[i].status !== '出席') guests[i].bento = 0;
   else if (guests[i].bento === 0) guests[i].bento = 1;
   saveLocal();
+  scheduleAutoSync();
   render();
 }
 
 function updateField(i, field, val) {
   guests[i][field] = field === 'bento' ? (parseInt(val) || 0) : val;
   saveLocal();
+  scheduleAutoSync();
   updateStats();
 }
 
@@ -557,6 +583,7 @@ function delPerson(i) {
   if (confirm(`確定刪除「${guests[i].name}」？`)) {
     guests.splice(i, 1);
     saveLocal();
+    scheduleAutoSync();
     render();
   }
 }
@@ -576,6 +603,7 @@ function addPerson() {
   document.getElementById('n-phone').value = '';
   document.getElementById('n-bento').value = '1';
   saveLocal();
+  scheduleAutoSync();
   showToast(`已新增「${name}」`);
   render();
 }
@@ -584,6 +612,7 @@ function resetData() {
   if (confirm('確定要重置為原始名單？所有修改都會消失。')) {
     guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS));
     saveLocal();
+    scheduleAutoSync();
     render();
     showToast('已重置為原始名單');
   }
