@@ -3,374 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>5/18 午餐會 來賓管理</title>
-
+<title>午餐會 來賓管理</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
-
-:root {
-  --bg: #F7F5F0;
-  --surface: #FFFFFF;
-  --border: #E5E0D8;
-  --border-strong: #C8C0B4;
-  --text: #1A1714;
-  --text-muted: #7A7368;
-  --text-faint: #B0A89E;
-  --accent: #2C5F2E;
-  --accent-light: #EAF2EA;
-  --red: #8B2020;
-  --red-light: #FAF0F0;
-  --amber: #7A5500;
-  --amber-light: #FDF6E3;
-  --blue: #1A3A6B;
-  --blue-light: #EEF3FB;
-  --purple: #4A1D8B;
-  --purple-light: #F0EAFB;
-  --radius: 10px;
-  --radius-sm: 6px;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Noto Sans TC', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 18px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.logo-title {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-  cursor: pointer;
-}
-
-.logo-title:hover {
-  text-decoration: underline;
-}
-
-.logo-sub {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: 'DM Mono', monospace;
-  margin-top: 2px;
-}
-
-.sync-status {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-family: 'DM Mono', monospace;
-}
-
-.sync-ok   { background: var(--accent-light); color: var(--accent); }
-.sync-err  { background: var(--red-light); color: var(--red); }
-.sync-ing  { background: var(--amber-light); color: var(--amber); }
-.sync-none { background: var(--bg); color: var(--text-faint); border: 1px solid var(--border); }
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.btn {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 7px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-strong);
-  background: var(--surface);
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.btn:hover {
-  background: var(--bg);
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
-.btn-primary:hover {
-  background: #1e4420;
-}
-
-.btn-danger {
-  color: var(--red);
-}
-
-.main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px 20px;
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  text-align: center;
-}
-
-.stat-num {
-  font-size: 26px;
-  font-weight: 700;
-  font-family: 'DM Mono', monospace;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.stat-card.coming .stat-num { color: var(--accent); }
-.stat-card.bento .stat-num { color: var(--blue); }
-.stat-card.absent .stat-num { color: var(--red); }
-.stat-card.unknown .stat-num { color: var(--amber); }
-.stat-card.asked .stat-num { color: var(--purple); }
-
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-
-.filter-group {
-  display: flex;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border: none;
-  border-right: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.filter-btn.active {
-  background: var(--text);
-  color: #fff;
-}
-
-.search-box {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 13px;
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  width: 180px;
-}
-
-.table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead th {
-  background: var(--bg);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  padding: 9px 12px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-
-tbody tr {
-  border-bottom: 1px solid var(--border);
-}
-
-tbody tr:hover {
-  background: var(--bg);
-}
-
-td {
-  padding: 8px 12px;
-  font-size: 13px;
-}
-
-td input[type=text],
-td input[type=number] {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 13px;
-  padding: 4px 8px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  width: 100%;
-}
-
-td input[type=number] {
-  width: 60px;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.s-coming { background: var(--accent-light); color: var(--accent); }
-.s-absent { background: var(--red-light); color: var(--red); }
-.s-unknown { background: var(--amber-light); color: var(--amber); }
-.s-asked { background: var(--purple-light); color: var(--purple); }
-
-.s-fixed {
-  background: #ECECEC;
-  color: #555;
-}
-
-.del-btn {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text-faint);
-  cursor: pointer;
-}
-
-.del-btn:hover {
-  border-color: var(--red);
-  background: var(--red-light);
-  color: var(--red);
-}
-
-.add-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-top: 14px;
-}
-
-.add-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-
-.add-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.add-row input,
-.add-row select {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 13px;
-  padding: 7px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg);
-}
-
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--text);
-  color: white;
-  font-size: 13px;
-  padding: 9px 18px;
-  border-radius: var(--radius);
-  opacity: 0;
-  transition: 0.2s;
-}
-
-.toast.show {
-  opacity: 1;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:#F7F5F0;--surface:#FFFFFF;--border:#E5E0D8;--border-strong:#C8C0B4;
+    --text:#1A1714;--text-muted:#7A7368;--text-faint:#B0A89E;
+    --accent:#2C5F2E;--accent-light:#EAF2EA;
+    --red:#8B2020;--red-light:#FAF0F0;
+    --amber:#7A5500;--amber-light:#FDF6E3;
+    --blue:#1A3A6B;--blue-light:#EEF3FB;
+    --purple:#4A1D8B;--purple-light:#F0EAFB;
+    --gray:#444444;--gray-light:#EEEEEE;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;}
+  .logo-title{font-size:17px;font-weight:700;letter-spacing:-0.3px;cursor:pointer;}
+  .logo-title:hover{text-decoration:underline;}
+  .logo-sub{font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:2px;}
+  .sync-status{font-size:11px;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;}
+  .sync-ok{background:var(--accent-light);color:var(--accent);}
+  .sync-err{background:var(--red-light);color:var(--red);}
+  .sync-ing{background:var(--amber-light);color:var(--amber);}
+  .sync-none{background:var(--bg);color:var(--text-faint);border:1px solid var(--border);}
+  .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .btn{font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:500;padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;}
+  .btn:hover{background:var(--bg);}.btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}.btn-primary:hover{background:#1e4420;}
+  .btn-danger{color:var(--red);}
+  .main{max-width:900px;margin:0 auto;padding:24px 20px;}
+  .setup-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;display:none;}
+  .setup-panel.show{display:block;}
+  .setup-panel h3{font-size:14px;font-weight:700;margin-bottom:12px;}
+  .setup-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .setup-row input{font-family:'Noto Sans TC',sans-serif;font-size:13px;padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);flex:1;min-width:260px;outline:none;}
+  .setup-row input:focus{border-color:var(--border-strong);}
+  .setup-hint{font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.6;}
+  .setup-hint code{background:var(--bg);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;font-size:11px;}
+  .stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px;}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 10px;text-align:center;}
+  .stat-num{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;margin-bottom:4px;}
+  .stat-label{font-size:10px;color:var(--text-muted);letter-spacing:0.04em;}
+  .stat-card.coming .stat-num{color:var(--accent);}
+  .stat-card.bento .stat-num{color:var(--blue);}
+  .stat-card.absent .stat-num{color:var(--red);}
+  .stat-card.unknown .stat-num{color:var(--amber);}
+  .stat-card.asked .stat-num{color:var(--purple);}
+  .stat-card.fixed .stat-num{color:var(--gray);}
+  .controls{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .filter-group{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+  .filter-btn{font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:500;padding:6px 12px;border:none;border-right:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+  .filter-btn:last-child{border-right:none;}
+  .filter-btn:hover{background:var(--bg);color:var(--text);}
+  .filter-btn.active{background:var(--text);color:#fff;}
+  .search-box{font-family:'Noto Sans TC',sans-serif;font-size:13px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);width:160px;outline:none;}
+  .search-box:focus{border-color:var(--border-strong);}
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  thead th{background:var(--bg);font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);}
+  tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:var(--bg);}
+  tbody tr.row-fixed{opacity:0.45;}
+  td{padding:8px 12px;vertical-align:middle;font-size:13px;}
+  td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:13px;padding:4px 8px;border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;color:var(--text);width:100%;transition:all 0.15s;outline:none;}
+  td input[type=text]:hover,td input[type=number]:hover{border-color:var(--border);background:var(--surface);}
+  td input[type=text]:focus,td input[type=number]:focus{border-color:var(--border-strong);background:var(--surface);box-shadow:0 0 0 3px rgba(44,95,46,0.08);}
+  td input[type=number]{width:56px;text-align:center;}
+  td input:disabled{opacity:0.3;pointer-events:none;}
+  .status-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;cursor:pointer;user-select:none;transition:all 0.15s;white-space:nowrap;}
+  .status-badge:hover{opacity:0.8;}.status-badge:active{transform:scale(0.96);}
+  .dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;}
+  .s-coming{background:var(--accent-light);color:var(--accent);}
+  .s-absent{background:var(--red-light);color:var(--red);}
+  .s-unknown{background:var(--amber-light);color:var(--amber);}
+  .s-asked{background:var(--purple-light);color:var(--purple);}
+  .s-fixed{background:var(--gray-light);color:var(--gray);}
+  .del-btn{font-size:11px;padding:3px 8px;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.15s;}
+  .del-btn:hover{border-color:var(--red);background:var(--red-light);color:var(--red);}
+  .add-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-top:14px;}
+  .add-label{font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+  .add-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .add-row input,.add-row select{font-family:'Noto Sans TC',sans-serif;font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+  .add-row input:focus,.add-row select:focus{border-color:var(--border-strong);}
+  .add-row input.f-name{width:90px;}.add-row input.f-bento{width:60px;}.add-row input.f-note{width:160px;}.add-row input.f-phone{width:130px;}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:#fff;font-size:13px;padding:9px 18px;border-radius:var(--radius);opacity:0;pointer-events:none;transition:all 0.25s;z-index:999;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .empty{text-align:center;padding:32px;color:var(--text-faint);font-size:13px;}
 </style>
 </head>
-
 <body>
 
 <header>
   <div>
-    <div class="logo-title">
-      ⚙ 5/18 午餐會 來賓管理
-    </div>
-
-    <div class="logo-sub">
-      曾獻瑩議員辦公室
-    </div>
+    <div class="logo-title" onclick="toggleSetup()" title="點此設定">⚙ 5/18 午餐會 來賓管理</div>
+    <div class="logo-sub">曾獻瑩議員辦公室</div>
   </div>
-
   <div class="header-actions">
+    <span class="sync-status sync-none" id="sync-status">未連線</span>
+    <button class="btn" onclick="syncFromSheet()">從雲端載入</button>
+    <button class="btn btn-primary" onclick="syncToSheet()">儲存到雲端</button>
     <button class="btn btn-danger" onclick="resetData()">重置</button>
     <button class="btn" onclick="copyText()">複製名單</button>
     <button class="btn" onclick="exportCSV()">匯出 CSV</button>
@@ -378,88 +112,58 @@ td input[type=number] {
 </header>
 
 <div class="main">
+  <div class="setup-panel" id="setup-panel">
+    <h3>⚙ Google Sheets 連線設定</h3>
+    <div class="setup-row">
+      <input type="text" id="gas-url" placeholder="貼上 Google Apps Script 部署網址">
+      <button class="btn btn-primary" onclick="saveGasUrl()">儲存設定</button>
+    </div>
+    <div class="setup-hint">
+      1. Google Sheets → 擴充功能 → Apps Script → 貼上 lunch_guests.gs → 儲存<br>
+      2. 部署 → 新增部署 → 網頁應用程式 → 執行身分:我 / 存取權:任何人 → 部署<br>
+      3. 複製網址貼到上方
+    </div>
+  </div>
 
   <div class="stats-row">
-
-    <div class="stat-card coming">
-      <div class="stat-num" id="s-coming">0</div>
-      <div class="stat-label">出席人數</div>
-    </div>
-
-    <div class="stat-card bento">
-      <div class="stat-num" id="s-bento">0</div>
-      <div class="stat-label">便當總數</div>
-    </div>
-
-    <div class="stat-card absent">
-      <div class="stat-num" id="s-absent">0</div>
-      <div class="stat-label">缺席 / 固定缺席</div>
-    </div>
-
-    <div class="stat-card unknown">
-      <div class="stat-num" id="s-unknown">0</div>
-      <div class="stat-label">待確認</div>
-    </div>
-
-    <div class="stat-card asked">
-      <div class="stat-num" id="s-asked">0</div>
-      <div class="stat-label">已詢問</div>
-    </div>
-
+    <div class="stat-card coming"><div class="stat-num" id="s-coming">0</div><div class="stat-label">出席人數</div></div>
+    <div class="stat-card bento"><div class="stat-num" id="s-bento">0</div><div class="stat-label">便當總數</div></div>
+    <div class="stat-card absent"><div class="stat-num" id="s-absent">0</div><div class="stat-label">缺席人數</div></div>
+    <div class="stat-card unknown"><div class="stat-num" id="s-unknown">0</div><div class="stat-label">待確認</div></div>
+    <div class="stat-card asked"><div class="stat-num" id="s-asked">0</div><div class="stat-label">已詢問</div></div>
+    <div class="stat-card fixed"><div class="stat-num" id="s-fixed">0</div><div class="stat-label">固定缺席</div></div>
   </div>
 
   <div class="controls">
-
     <div class="filter-group">
       <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
       <button class="filter-btn" onclick="setFilter('出席',this)">出席</button>
       <button class="filter-btn" onclick="setFilter('缺席',this)">缺席</button>
-      <button class="filter-btn" onclick="setFilter('固定缺席',this)">固定缺席</button>
       <button class="filter-btn" onclick="setFilter('待確認',this)">待確認</button>
       <button class="filter-btn" onclick="setFilter('已詢問',this)">已詢問</button>
+      <button class="filter-btn" onclick="setFilter('固定缺席',this)">固定缺席</button>
     </div>
-
-    <input
-      type="text"
-      class="search-box"
-      id="search"
-      placeholder="搜尋姓名 / 備註..."
-      oninput="render()"
-    >
-
+    <input type="text" class="search-box" id="search" placeholder="搜尋姓名 / 備註..." oninput="render()">
   </div>
 
   <div class="table-wrap">
-
     <table>
-
-      <thead>
-        <tr>
-          <th>姓名</th>
-          <th>狀態</th>
-          <th>便當</th>
-          <th>備註</th>
-          <th>電話</th>
-          <th></th>
-        </tr>
-      </thead>
-
+      <thead><tr>
+        <th style="width:88px;">姓名</th>
+        <th style="width:115px;">狀態</th>
+        <th style="width:58px;">便當</th>
+        <th>備註</th>
+        <th style="width:120px;">電話</th>
+        <th style="width:48px;"></th>
+      </tr></thead>
       <tbody id="tbody"></tbody>
-
     </table>
-
   </div>
 
   <div class="add-section">
-
-    <div class="add-label">
-      新增來賓
-    </div>
-
+    <div class="add-label">新增來賓</div>
     <div class="add-row">
-
-      <input type="text" id="n-name" placeholder="姓名">
-
+      <input class="f-name" type="text" id="n-name" placeholder="姓名">
       <select id="n-status">
         <option value="出席">出席</option>
         <option value="待確認" selected>待確認</option>
@@ -467,412 +171,248 @@ td input[type=number] {
         <option value="缺席">缺席</option>
         <option value="固定缺席">固定缺席</option>
       </select>
-
-      <input type="number" id="n-bento" value="1" min="0" max="20">
-
-      <input type="text" id="n-note" placeholder="備註">
-
-      <input type="text" id="n-phone" placeholder="電話">
-
-      <button class="btn btn-primary" onclick="addPerson()">
-        新增
-      </button>
-
+      <input class="f-bento" type="number" id="n-bento" value="1" min="0" max="20">
+      <input class="f-note" type="text" id="n-note" placeholder="備註">
+      <input class="f-phone" type="text" id="n-phone" placeholder="電話">
+      <button class="btn btn-primary" onclick="addPerson()">新增</button>
     </div>
-
   </div>
-
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-
-const LOCAL_KEY = 'lunch-guests-0518';
+const LOCAL_KEY = 'lunch-guests-v3';
+const GAS_KEY = 'lunch-gas-url';
+const HARDCODED_GAS_URL = 'https://script.google.com/macros/s/AKfycbxkc7ixGzBxrE5Mo90oELhquakCbSQXlV6SEwemMlYcpCtF-Py5C9_9clyyKnxpYxK2uQ/exec';
 
 const DEFAULT_GUESTS = [
-  {name:"彥漢8872",status:"出席",bento:1,note:"脆皮雞",phone:""},
-  {name:"秀華",status:"出席",bento:1,note:"海南雞",phone:""},
-  {name:"雅雯4997",status:"出席",bento:1,note:"海南雞",phone:""},
-  {name:"豪雷",status:"出席",bento:1,note:"",phone:""},
-  {name:"天維",status:"出席",bento:1,note:"",phone:""},
-  {name:"銓興哥",status:"出席",bento:0,note:"",phone:""},
-  {name:"大衛",status:"固定缺席",bento:0,note:"",phone:""},
+  {name:"彥漢8872",status:"出席",   bento:1,note:"脆皮雞",phone:"0920-856-700"},
+  {name:"秀華",    status:"出席",   bento:1,note:"張淑惠 關崇仁 林湛",phone:""},
+  {name:"雅雯4997",status:"出席",   bento:1,note:"海南雞",phone:""},
+  {name:"豪雷",    status:"出席",   bento:1,note:"",phone:""},
+  {name:"天維",    status:"出席",   bento:1,note:"",phone:""},
+  {name:"銓興哥",  status:"出席",   bento:0,note:"",phone:""},
+  {name:"林湛",    status:"出席",   bento:0,note:"",phone:""},
+  {name:"關崇仁",  status:"待確認", bento:0,note:"",phone:""},
+  {name:"吉昇",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"莊敬",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"美玲",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"佳頤",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"冠禎",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"宗諺",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"懿恬",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"閔翔",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"鴻華",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"政宏",    status:"待確認", bento:0,note:"",phone:""},
+  {name:"黎大哥",  status:"待確認", bento:0,note:"",phone:""},
+  {name:"大衛",    status:"缺席",   bento:0,note:"",phone:""},
+  {name:"麗文8815",status:"缺席",   bento:0,note:"8815 璊莉 4511 軟網四月中",phone:""},
+  {name:"守愚",    status:"缺席",   bento:0,note:"",phone:""},
+  {name:"欣美姐",  status:"缺席",   bento:0,note:"",phone:""},
+  {name:"俊維",    status:"缺席",   bento:0,note:"隔週值班",phone:""},
+  {name:"家銘",    status:"缺席",   bento:0,note:"",phone:""},
+  {name:"世德",    status:"固定缺席",bento:0,note:"當兵",phone:""},
+  {name:"士斌",    status:"固定缺席",bento:0,note:"放療",phone:""},
+  {name:"Cindy姐", status:"缺席",   bento:0,note:"",phone:""},
+  {name:"淑慧",    status:"缺席",   bento:0,note:"",phone:""},
 ];
 
-let guests = [];
-let curFilter = 'all';
+let guests=[],curFilter='all',gasUrl='';
 
-function init() {
+function init(){
+  gasUrl=localStorage.getItem(GAS_KEY)||HARDCODED_GAS_URL;
+  document.getElementById('gas-url').value=gasUrl;
+  syncFromSheet(true);
+}
 
-  try {
+function saveLocal(){try{localStorage.setItem(LOCAL_KEY,JSON.stringify(guests));}catch(e){}}
 
-    const saved = localStorage.getItem(LOCAL_KEY);
+let autoSyncTimer=null;
+function scheduleAutoSync(){
+  if(!gasUrl)return;
+  clearTimeout(autoSyncTimer);
+  setSyncStatus('ing','等待同步...');
+  autoSyncTimer=setTimeout(()=>syncToSheet(true),1500);
+}
 
-    guests = saved
-      ? JSON.parse(saved)
-      : JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+function saveGasUrl(){
+  const val=document.getElementById('gas-url').value.trim();
+  if(!val){showToast('請輸入網址');return;}
+  gasUrl=val;localStorage.setItem(GAS_KEY,gasUrl);
+  setSyncStatus('ok','已儲存設定');showToast('GAS 網址已儲存');
+  document.getElementById('setup-panel').classList.remove('show');
+}
 
-  } catch(e) {
+function toggleSetup(){document.getElementById('setup-panel').classList.toggle('show');}
 
-    guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+function setSyncStatus(type,msg){
+  const el=document.getElementById('sync-status');
+  el.className='sync-status sync-'+type;el.textContent=msg;
+}
 
+async function syncFromSheet(silent=false){
+  if(!gasUrl){if(!silent)showToast('請先設定 GAS 網址');return;}
+  setSyncStatus('ing','載入中...');
+  try{
+    const res=await fetch(gasUrl+'?action=read');
+    const data=await res.json();
+    if(data.ok&&data.guests.length>0){
+      guests=data.guests;saveLocal();render();
+      setSyncStatus('ok','✓ 已同步');
+      if(!silent)showToast('載入成功，共 '+guests.length+' 人');
+    }else{
+      try{const s=localStorage.getItem(LOCAL_KEY);guests=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
+      catch(e){guests=JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
+      render();setSyncStatus('ok','雲端無資料');
+      if(!silent)showToast('雲端目前沒有資料');
+    }
+  }catch(e){
+    try{const s=localStorage.getItem(LOCAL_KEY);guests=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
+    catch(e2){guests=JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
+    render();setSyncStatus('err','同步失敗');
+    if(!silent)showToast('載入失敗');
   }
-
-  render();
 }
 
-function saveLocal() {
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(guests));
+async function syncToSheet(silent=false){
+  if(!gasUrl){if(!silent)showToast('請先設定 GAS 網址');return;}
+  setSyncStatus('ing','同步中...');
+  try{
+    const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'write',guests})});
+    const data=await res.json();
+    if(data.ok){setSyncStatus('ok','✓ 已同步');if(!silent)showToast('已儲存到 Google Sheets（'+data.count+' 人）');}
+    else throw new Error(data.error);
+  }catch(e){setSyncStatus('err','同步失敗');if(!silent)showToast('儲存失敗：'+e.message);}
 }
 
-function statusClass(s) {
-
-  if (s === '出席') return 's-coming';
-
-  if (s === '缺席') return 's-absent';
-
-  if (s === '固定缺席') return 's-fixed';
-
-  if (s === '已詢問') return 's-asked';
-
+function statusClass(s){
+  if(s==='出席')return 's-coming';
+  if(s==='缺席')return 's-absent';
+  if(s==='已詢問')return 's-asked';
+  if(s==='固定缺席')return 's-fixed';
   return 's-unknown';
 }
 
-function cycleStatus(i) {
-
-  const order = [
-    '出席',
-    '缺席',
-    '固定缺席',
-    '待確認',
-    '已詢問'
-  ];
-
-  guests[i].status =
-    order[(order.indexOf(guests[i].status) + 1) % order.length];
-
-  if (guests[i].status !== '出席') {
-    guests[i].bento = 0;
-  } else if (guests[i].bento === 0) {
-    guests[i].bento = 1;
-  }
-
-  saveLocal();
-
-  render();
+function cycleStatus(i){
+  const order=['出席','缺席','待確認','已詢問','固定缺席'];
+  guests[i].status=order[(order.indexOf(guests[i].status)+1)%order.length];
+  if(guests[i].status!=='出席')guests[i].bento=0;
+  else if(guests[i].bento===0)guests[i].bento=1;
+  saveLocal();scheduleAutoSync();render();
 }
 
-function updateField(i, field, val) {
+function updateField(i,field,val){
+  guests[i][field]=field==='bento'?(parseInt(val)||0):val;
+  saveLocal();scheduleAutoSync();updateStats();
+}
 
-  guests[i][field] =
-    field === 'bento'
-      ? (parseInt(val) || 0)
-      : val;
+function delPerson(i){
+  if(confirm('確定刪除「'+guests[i].name+'」？')){
+    guests.splice(i,1);saveLocal();scheduleAutoSync();render();
+  }
+}
 
-  saveLocal();
+function addPerson(){
+  const name=document.getElementById('n-name').value.trim();
+  if(!name){showToast('請輸入姓名');return;}
+  guests.push({name,status:document.getElementById('n-status').value,bento:parseInt(document.getElementById('n-bento').value)||0,note:document.getElementById('n-note').value.trim(),phone:document.getElementById('n-phone').value.trim()});
+  document.getElementById('n-name').value='';document.getElementById('n-note').value='';
+  document.getElementById('n-phone').value='';document.getElementById('n-bento').value='1';
+  saveLocal();scheduleAutoSync();showToast('已新增「'+name+'」');render();
+}
 
+function resetData(){
+  if(confirm('確定要重置為原始名單？所有修改都會消失。')){
+    guests=JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+    saveLocal();scheduleAutoSync();render();showToast('已重置為原始名單');
+  }
+}
+
+function setFilter(f,el){
+  curFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');render();
+}
+
+function updateStats(){
+  const coming=guests.filter(g=>g.status==='出席');
+  document.getElementById('s-coming').textContent=coming.length;
+  document.getElementById('s-bento').textContent=coming.reduce((a,g)=>a+g.bento,0);
+  document.getElementById('s-absent').textContent=guests.filter(g=>g.status==='缺席').length;
+  document.getElementById('s-unknown').textContent=guests.filter(g=>g.status==='待確認').length;
+  document.getElementById('s-asked').textContent=guests.filter(g=>g.status==='已詢問').length;
+  document.getElementById('s-fixed').textContent=guests.filter(g=>g.status==='固定缺席').length;
+}
+
+function render(){
   updateStats();
-}
-
-function delPerson(i) {
-
-  if (confirm(`確定刪除「${guests[i].name}」？`)) {
-
-    guests.splice(i, 1);
-
-    saveLocal();
-
-    render();
-  }
-}
-
-function addPerson() {
-
-  const name = document.getElementById('n-name').value.trim();
-
-  if (!name) {
-    showToast('請輸入姓名');
-    return;
-  }
-
-  guests.push({
-    name,
-    status: document.getElementById('n-status').value,
-    bento: parseInt(document.getElementById('n-bento').value) || 0,
-    note: document.getElementById('n-note').value.trim(),
-    phone: document.getElementById('n-phone').value.trim(),
-  });
-
-  document.getElementById('n-name').value = '';
-  document.getElementById('n-note').value = '';
-  document.getElementById('n-phone').value = '';
-  document.getElementById('n-bento').value = '1';
-
-  saveLocal();
-
-  render();
-}
-
-function resetData() {
-
-  if (confirm('確定要重置？')) {
-
-    guests =
-      JSON.parse(JSON.stringify(DEFAULT_GUESTS));
-
-    saveLocal();
-
-    render();
-  }
-}
-
-function setFilter(f, el) {
-
-  curFilter = f;
-
-  document.querySelectorAll('.filter-btn')
-    .forEach(b => b.classList.remove('active'));
-
-  el.classList.add('active');
-
-  render();
-}
-
-function updateStats() {
-
-  const coming =
-    guests.filter(g => g.status === '出席');
-
-  document.getElementById('s-coming').textContent =
-    coming.length;
-
-  document.getElementById('s-bento').textContent =
-    coming.reduce((a, g) => a + g.bento, 0);
-
-  document.getElementById('s-absent').textContent =
-    guests.filter(g =>
-      g.status === '缺席' ||
-      g.status === '固定缺席'
-    ).length;
-
-  document.getElementById('s-unknown').textContent =
-    guests.filter(g => g.status === '待確認').length;
-
-  document.getElementById('s-asked').textContent =
-    guests.filter(g => g.status === '已詢問').length;
-}
-
-function render() {
-
-  updateStats();
-
-  const q =
-    document.getElementById('search')
-      .value
-      .trim()
-      .toLowerCase();
-
-  let list =
-    guests.map((g, i) => ({...g, _i:i}));
-
-  if (curFilter !== 'all') {
-    list = list.filter(g => g.status === curFilter);
-  }
-
-  if (q) {
-
-    list = list.filter(g =>
-      g.name.toLowerCase().includes(q) ||
-      g.note.toLowerCase().includes(q)
-    );
-  }
-
-  const tb = document.getElementById('tbody');
-
-  tb.innerHTML = list.map(g => {
-
-    const ri = g._i;
-
-    const sc = statusClass(g.status);
-
-    return `
-      <tr>
-
-        <td>
-          <input
-            type="text"
-            value="${g.name}"
-            onchange="updateField(${ri},'name',this.value)"
-          >
-        </td>
-
-        <td>
-          <span
-            class="status-badge ${sc}"
-            onclick="cycleStatus(${ri})"
-          >
-            <span class="dot"></span>
-            ${g.status}
-          </span>
-        </td>
-
-        <td>
-          <input
-            type="number"
-            value="${g.bento}"
-            min="0"
-            max="20"
-            onchange="updateField(${ri},'bento',this.value)"
-            ${g.status !== '出席' ? 'disabled' : ''}
-          >
-        </td>
-
-        <td>
-          <input
-            type="text"
-            value="${g.note}"
-            onchange="updateField(${ri},'note',this.value)"
-          >
-        </td>
-
-        <td>
-          <input
-            type="text"
-            value="${g.phone}"
-            onchange="updateField(${ri},'phone',this.value)"
-          >
-        </td>
-
-        <td>
-          <button
-            class="del-btn"
-            onclick="delPerson(${ri})"
-          >
-            刪除
-          </button>
-        </td>
-
-      </tr>
-    `;
-
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  let list=guests.map((g,i)=>({...g,_i:i}));
+  if(curFilter!=='all')list=list.filter(g=>g.status===curFilter);
+  if(q)list=list.filter(g=>g.name.toLowerCase().includes(q)||g.note.toLowerCase().includes(q));
+  const tb=document.getElementById('tbody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6" class="empty">沒有符合條件的來賓</td></tr>';return;}
+  tb.innerHTML=list.map(g=>{
+    const ri=g._i,sc=statusClass(g.status),isFixed=g.status==='固定缺席';
+    return '<tr class="'+(isFixed?'row-fixed':'')+'">'+
+      '<td><input type="text" value="'+esc(g.name)+'" onchange="updateField('+ri+',\'name\',this.value)"></td>'+
+      '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+g.status+'</span></td>'+
+      '<td><input type="number" value="'+g.bento+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(g.status!=='出席'?' disabled':'')+' ></td>'+
+      '<td><input type="text" value="'+esc(g.note)+'" onchange="updateField('+ri+',\'note\',this.value)"></td>'+
+      '<td><input type="text" value="'+esc(g.phone)+'" onchange="updateField('+ri+',\'phone\',this.value)"></td>'+
+      '<td><button class="del-btn" onclick="delPerson('+ri+')">刪除</button></td>'+
+      '</tr>';
   }).join('');
 }
 
-function exportCSV() {
+function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
-  const bom = '\uFEFF';
-
-  const hdr =
-    '姓名,出缺席狀態,便當數量,備註,聯絡電話\n';
-
-  const rows =
-    guests.map(g =>
-      `"${g.name}","${g.status}","${g.bento}","${g.note}","${g.phone}"`
-    ).join('\n');
-
-  const blob =
-    new Blob([bom + hdr + rows], {
-      type: 'text/csv;charset=utf-8'
-    });
-
-  const a = document.createElement('a');
-
-  a.href = URL.createObjectURL(blob);
-
-  a.download = '午餐會來賓名單.csv';
-
-  a.click();
-
+function exportCSV(){
+  const bom='\uFEFF',hdr='姓名,出缺席狀態,便當數量,備註,聯絡電話\n';
+  const rows=guests.map(g=>'"'+g.name+'","'+g.status+'","'+g.bento+'","'+g.note+'","'+g.phone+'"').join('\n');
+  const blob=new Blob([bom+hdr+rows],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='午餐會來賓名單_0518.csv';a.click();
   showToast('CSV 匯出成功');
 }
 
-function copyText() {
-
-  const coming =
-    guests.filter(g => g.status === '出席');
-
-  const unknown =
-    guests.filter(g => g.status === '待確認');
-
-  const asked =
-    guests.filter(g => g.status === '已詢問');
-
-  const absent =
-    guests.filter(g =>
-      g.status === '缺席' ||
-      g.status === '固定缺席'
-    );
-
-  const bento =
-    coming.reduce((a, g) => a + g.bento, 0);
-
-  let txt = `5/18 午餐會來賓名單\n`;
-
-  txt += `${'─'.repeat(24)}\n`;
-
-  txt += `【出席 ${coming.length} 人 ／ 便當 ${bento} 個】\n`;
-
-  txt += coming.map(g =>
-    `• ${g.name}${g.note ? ' — ' + g.note : ''}`
-  ).join('\n');
-
-  if (asked.length) {
-
-    txt += `\n\n【已詢問 ${asked.length} 人】\n`;
-
-    txt += asked.map(g =>
-      `• ${g.name}`
-    ).join('\n');
-  }
-
-  if (unknown.length) {
-
-    txt += `\n\n【待確認 ${unknown.length} 人】\n`;
-
-    txt += unknown.map(g =>
-      `• ${g.name}`
-    ).join('\n');
-  }
-
-  if (absent.length) {
-
-    txt += `\n\n【缺席 / 固定缺席 ${absent.length} 人】\n`;
-
-    txt += absent.map(g =>
-      `• ${g.name}`
-    ).join('\n');
-  }
-
-  navigator.clipboard.writeText(txt);
-
-  showToast('已複製名單');
+function copyText(){
+  const coming=guests.filter(g=>g.status==='出席');
+  const asked=guests.filter(g=>g.status==='已詢問');
+  const unknown=guests.filter(g=>g.status==='待確認');
+  const absent=guests.filter(g=>g.status==='缺席');
+  const fixed=guests.filter(g=>g.status==='固定缺席');
+  const bento=coming.reduce((a,g)=>a+g.bento,0);
+  let txt='5/18 午餐會來賓名單\n'+'─'.repeat(24)+'\n';
+  txt+='【出席 '+coming.length+' 人 ／ 便當 '+bento+' 個】\n';
+  txt+=coming.map(g=>'• '+g.name+(g.bento>1?'（便當×'+g.bento+'）':'')+(g.note?' — '+g.note:'')).join('\n');
+  if(asked.length){txt+='\n\n【已詢問 '+asked.length+' 人】\n';txt+=asked.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
+  if(unknown.length){txt+='\n\n【待確認 '+unknown.length+' 人】\n';txt+=unknown.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
+  if(absent.length){txt+='\n\n【缺席 '+absent.length+' 人】\n';txt+=absent.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
+  if(fixed.length){txt+='\n\n【固定缺席 '+fixed.length+' 人】\n';txt+=fixed.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
+  copyToClipboard(txt);
 }
 
-function showToast(msg) {
-
-  const t = document.getElementById('toast');
-
-  t.textContent = msg;
-
-  t.classList.add('show');
-
-  setTimeout(() => {
-    t.classList.remove('show');
-  }, 2200);
+function copyToClipboard(txt){
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(()=>showToast('名單已複製到剪貼簿')).catch(()=>fallbackCopy(txt));}
+  else fallbackCopy(txt);
 }
 
-document.getElementById('n-name')
-  .addEventListener('keydown', e => {
+function fallbackCopy(txt){
+  const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');showToast('名單已複製到剪貼簿');}
+  catch(e){showToast('複製失敗，請手動複製');}
+  document.body.removeChild(ta);
+}
 
-    if (e.key === 'Enter') {
-      addPerson();
-    }
-  });
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
 
+document.getElementById('n-name').addEventListener('keydown',e=>{if(e.key==='Enter')addPerson();});
 init();
-
 </script>
-
 </body>
 </html>
