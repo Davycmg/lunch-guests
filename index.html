@@ -3,22 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>5/18 午餐會 座位表</title>
+
+<title>5/18 午餐會 來賓管理</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg: #F4F1EC;
-  --wood: #C8A97A;
-  --wood-dark: #A07850;
-  --wood-light: #E2CDA8;
-  --surface: #FDFAF5;
-  --border: #DDD5C4;
-  --text: #2A2218;
-  --text-muted: #8A7D6A;
-  --shadow: 0 2px 12px rgba(42,34,24,0.10);
-  --radius: 12px;
+  --bg: #F7F5F0;
+  --surface: #FFFFFF;
+  --border: #E5E0D8;
+  --border-strong: #C8C0B4;
+  --text: #1A1714;
+  --text-muted: #7A7368;
+  --text-faint: #B0A89E;
+  --accent: #2C5F2E;
+  --accent-light: #EAF2EA;
+  --red: #8B2020;
+  --red-light: #FAF0F0;
+  --amber: #7A5500;
+  --amber-light: #FDF6E3;
+  --blue: #1A3A6B;
+  --blue-light: #EEF3FB;
+  --purple: #4A1D8B;
+  --purple-light: #F0EAFB;
+  --radius: 10px;
+  --radius-sm: 6px;
 }
 
 * {
@@ -37,22 +47,52 @@ body {
 header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 16px 28px;
+  padding: 18px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.title {
+.logo-title {
   font-size: 17px;
   font-weight: 700;
+  letter-spacing: -0.3px;
+  cursor: pointer;
 }
 
-.subtitle {
+.logo-title:hover {
+  text-decoration: underline;
+}
+
+.logo-sub {
   font-size: 12px;
   color: var(--text-muted);
   font-family: 'DM Mono', monospace;
   margin-top: 2px;
+}
+
+.sync-status {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+}
+
+.sync-ok   { background: var(--accent-light); color: var(--accent); }
+.sync-err  { background: var(--red-light); color: var(--red); }
+.sync-ing  { background: var(--amber-light); color: var(--amber); }
+.sync-none { background: var(--bg); color: var(--text-faint); border: 1px solid var(--border); }
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -60,8 +100,8 @@ header {
   font-size: 13px;
   font-weight: 500;
   padding: 7px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
@@ -72,212 +112,247 @@ header {
   background: var(--bg);
 }
 
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: #1e4420;
+}
+
+.btn-danger {
+  color: var(--red);
+}
+
 .main {
   max-width: 900px;
   margin: 0 auto;
-  padding: 28px 20px;
+  padding: 24px 20px;
 }
 
-.room {
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  text-align: center;
 }
 
-.room-label {
-  font-size: 11px;
+.stat-num {
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.conference-table {
-  background: linear-gradient(135deg, var(--wood-light) 0%, var(--wood) 50%, var(--wood-dark) 100%);
-  border-radius: 20px;
-  padding: 20px 32px;
-  margin: 0 auto;
-  box-shadow: 0 6px 24px rgba(120,80,30,0.25), inset 0 1px 0 rgba(255,255,255,0.3);
-  position: relative;
-}
-
-.conference-table::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: 17px;
-  border: 1px solid rgba(255,255,255,0.2);
-  pointer-events: none;
-}
-
-.table-label {
-  text-align: center;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 12px;
   font-family: 'DM Mono', monospace;
+  line-height: 1;
+  margin-bottom: 4px;
 }
 
-.team-row {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin: 8px 0;
-}
-
-.team-row + .team-row {
-  margin-top: 16px;
-}
-
-.seats {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  flex: 1;
-}
-
-.seat {
-  background: white;
-  border-radius: 10px;
-  padding: 8px 10px;
-  min-width: 110px;
-  max-width: 140px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  cursor: grab;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-  position: relative;
-  user-select: none;
-  border: 2px solid transparent;
-}
-
-.seat:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
-
-.seat.dragging {
-  opacity: 0.4;
-  transform: scale(0.96);
-  cursor: grabbing;
-}
-
-.seat.drag-over {
-  border-color: var(--wood);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(120,80,30,0.25);
-}
-
-.seat-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.seat-meal {
-  font-size: 10px;
+.stat-label {
+  font-size: 11px;
   color: var(--text-muted);
-  margin-top: 4px;
 }
 
-.seat-note {
-  font-size: 9px;
-  color: #aaa;
-  margin-top: 2px;
-}
+.stat-card.coming .stat-num { color: var(--accent); }
+.stat-card.bento .stat-num { color: var(--blue); }
+.stat-card.absent .stat-num { color: var(--red); }
+.stat-card.unknown .stat-num { color: var(--amber); }
+.stat-card.asked .stat-num { color: var(--purple); }
 
-.status-buttons {
-  display: flex;
-  gap: 4px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-}
-
-.status-btn {
-  border: none;
-  border-radius: 6px;
-  padding: 3px 6px;
-  font-size: 10px;
-  cursor: pointer;
-  background: #eee;
-  color: #333;
-}
-
-.status-btn.active {
-  background: #A07850;
-  color: white;
-}
-
-.seat-empty {
-  background: rgba(255,255,255,0.15);
-  border: 2px dashed rgba(255,255,255,0.3);
-  border-radius: 10px;
-  min-width: 100px;
-  max-width: 130px;
-  min-height: 72px;
+.controls {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  cursor: default;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
 }
 
-.table-divider {
-  height: 1px;
-  background: rgba(255,255,255,0.15);
-  margin: 14px 0;
+.filter-group {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-wrap: wrap;
 }
 
-.bench {
+.filter-btn {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: var(--text);
+  color: #fff;
+}
+
+.search-box {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  width: 180px;
+}
+
+.table-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px 20px;
-  box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
-.bench-label {
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background: var(--bg);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
 }
 
-.bench-seats {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  min-height: 80px;
+tbody tr {
+  border-bottom: 1px solid var(--border);
 }
 
-.bench-seats .seat {
+tbody tr:hover {
   background: var(--bg);
 }
 
-.bench-seats.drag-over-zone {
-  background: #EEF7EE;
-  border-radius: 8px;
+td {
+  padding: 8px 12px;
+  font-size: 13px;
 }
 
-.hint {
+td input[type=text],
+td input[type=number] {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  width: 100%;
+}
+
+td input[type=number] {
+  width: 60px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.s-coming { background: var(--accent-light); color: var(--accent); }
+.s-absent { background: var(--red-light); color: var(--red); }
+.s-unknown { background: var(--amber-light); color: var(--amber); }
+.s-asked { background: var(--purple-light); color: var(--purple); }
+
+.s-fixed {
+  background: #ECECEC;
+  color: #555;
+}
+
+.del-btn {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.del-btn:hover {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red);
+}
+
+.add-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-top: 14px;
+}
+
+.add-label {
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text-muted);
-  text-align: center;
-  margin-top: 12px;
-  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.add-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.add-row input,
+.add-row select {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: white;
+  font-size: 13px;
+  padding: 9px 18px;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.toast.show {
+  opacity: 1;
 }
 </style>
 </head>
@@ -286,391 +361,518 @@ header {
 
 <header>
   <div>
-    <div class="title">5/18 午餐會 座位表</div>
-    <div class="subtitle">曾獻瑩議員辦公室 · 大會議室</div>
+    <div class="logo-title">
+      ⚙ 5/18 午餐會 來賓管理
+    </div>
+
+    <div class="logo-sub">
+      曾獻瑩議員辦公室
+    </div>
   </div>
 
-  <div style="display:flex;gap:8px;">
-    <button class="btn" onclick="resetSeats()">重置座位</button>
-    <button class="btn" onclick="printPage()">列印</button>
+  <div class="header-actions">
+    <button class="btn btn-danger" onclick="resetData()">重置</button>
+    <button class="btn" onclick="copyText()">複製名單</button>
+    <button class="btn" onclick="exportCSV()">匯出 CSV</button>
   </div>
 </header>
 
 <div class="main">
 
-  <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
-    拖曳卡片可調整座位
-  </div>
+  <div class="stats-row">
 
-  <div class="room">
-
-    <div class="room-label">五樓第三會議室</div>
-
-    <div class="conference-table">
-
-      <div class="table-label">— 大 會 議 桌 —</div>
-
-      <div class="team-row">
-        <div class="seats" id="row-a"></div>
-      </div>
-
-      <div class="table-divider"></div>
-
-      <div class="team-row">
-        <div class="seats" id="row-b"></div>
-      </div>
-
+    <div class="stat-card coming">
+      <div class="stat-num" id="s-coming">0</div>
+      <div class="stat-label">出席人數</div>
     </div>
 
-    <div class="hint">
-      拖曳卡片到對面那排，或放到「候補區」暫存
+    <div class="stat-card bento">
+      <div class="stat-num" id="s-bento">0</div>
+      <div class="stat-label">便當總數</div>
+    </div>
+
+    <div class="stat-card absent">
+      <div class="stat-num" id="s-absent">0</div>
+      <div class="stat-label">缺席 / 固定缺席</div>
+    </div>
+
+    <div class="stat-card unknown">
+      <div class="stat-num" id="s-unknown">0</div>
+      <div class="stat-label">待確認</div>
+    </div>
+
+    <div class="stat-card asked">
+      <div class="stat-num" id="s-asked">0</div>
+      <div class="stat-label">已詢問</div>
     </div>
 
   </div>
 
-  <div class="bench">
+  <div class="controls">
 
-    <div class="bench-label">候補 / 暫存區</div>
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
+      <button class="filter-btn" onclick="setFilter('出席',this)">出席</button>
+      <button class="filter-btn" onclick="setFilter('缺席',this)">缺席</button>
+      <button class="filter-btn" onclick="setFilter('固定缺席',this)">固定缺席</button>
+      <button class="filter-btn" onclick="setFilter('待確認',this)">待確認</button>
+      <button class="filter-btn" onclick="setFilter('已詢問',this)">已詢問</button>
+    </div>
 
-    <div class="bench-seats" id="bench"></div>
+    <input
+      type="text"
+      class="search-box"
+      id="search"
+      placeholder="搜尋姓名 / 備註..."
+      oninput="render()"
+    >
+
+  </div>
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>狀態</th>
+          <th>便當</th>
+          <th>備註</th>
+          <th>電話</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody id="tbody"></tbody>
+
+    </table>
+
+  </div>
+
+  <div class="add-section">
+
+    <div class="add-label">
+      新增來賓
+    </div>
+
+    <div class="add-row">
+
+      <input type="text" id="n-name" placeholder="姓名">
+
+      <select id="n-status">
+        <option value="出席">出席</option>
+        <option value="待確認" selected>待確認</option>
+        <option value="已詢問">已詢問</option>
+        <option value="缺席">缺席</option>
+        <option value="固定缺席">固定缺席</option>
+      </select>
+
+      <input type="number" id="n-bento" value="1" min="0" max="20">
+
+      <input type="text" id="n-note" placeholder="備註">
+
+      <input type="text" id="n-phone" placeholder="電話">
+
+      <button class="btn btn-primary" onclick="addPerson()">
+        新增
+      </button>
+
+    </div>
 
   </div>
 
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-const STORAGE_KEY = 'seating-0518-v1';
 
-const DEFAULT = {
-  a: [
-    {id:'s1', name:'秀華', meal:'海南雞', note:'', status:'出席'},
-    {id:'s2', name:'雅雯', meal:'海南雞', note:'', status:'出席'},
-    {id:'s3', name:'林湛', meal:'胭脂肉', note:'', status:'出席'},
-    {id:'s4', name:'冠禎', meal:'', note:'', status:'出席'},
-  ],
+const LOCAL_KEY = 'lunch-guests-0518';
 
-  b: [
-    {id:'s5', name:'彥漢', meal:'脆皮雞', note:'', status:'出席'},
-    {id:'s6', name:'豪雷', meal:'', note:'', status:'出席'},
-    {id:'s7', name:'天維', meal:'', note:'', status:'出席'},
-    {id:'s8', name:'銓興哥', meal:'海南雞', note:'', status:'出席'},
-    {id:'s9', name:'吉昇', meal:'', note:'', status:'出席'},
-  ],
+const DEFAULT_GUESTS = [
+  {name:"彥漢8872",status:"出席",bento:1,note:"脆皮雞",phone:""},
+  {name:"秀華",status:"出席",bento:1,note:"海南雞",phone:""},
+  {name:"雅雯4997",status:"出席",bento:1,note:"海南雞",phone:""},
+  {name:"豪雷",status:"出席",bento:1,note:"",phone:""},
+  {name:"天維",status:"出席",bento:1,note:"",phone:""},
+  {name:"銓興哥",status:"出席",bento:0,note:"",phone:""},
+  {name:"大衛",status:"固定缺席",bento:0,note:"",phone:""},
+];
 
-  bench: []
-};
+let guests = [];
+let curFilter = 'all';
 
-let state;
+function init() {
 
-function loadState() {
   try {
-    const s = localStorage.getItem(STORAGE_KEY);
-    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT));
+
+    const saved = localStorage.getItem(LOCAL_KEY);
+
+    guests = saved
+      ? JSON.parse(saved)
+      : JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+
   } catch(e) {
-    return JSON.parse(JSON.stringify(DEFAULT));
-  }
-}
 
-function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch(e) {}
-}
+    guests = JSON.parse(JSON.stringify(DEFAULT_GUESTS));
 
-function resetSeats() {
-  if (confirm('確定重置為預設座位？')) {
-    state = JSON.parse(JSON.stringify(DEFAULT));
-    saveState();
-    render();
-  }
-}
-
-function printPage() {
-  window.print();
-}
-
-function setStatus(id, status) {
-  for (const row of ['a','b','bench']) {
-    const person = state[row].find(x => x.id === id);
-
-    if (person) {
-      person.status = status;
-      break;
-    }
   }
 
-  saveState();
   render();
 }
 
-let dragId = null;
-
-function makeSeatEl(p, rowId) {
-
-  const div = document.createElement('div');
-
-  div.className = 'seat';
-  div.dataset.id = p.id;
-  div.dataset.row = rowId;
-  div.draggable = true;
-
-  const mealIcon = {
-    海南雞:'🍗',
-    脆皮雞:'🍖',
-    鮮蔬咖哩:'🍛',
-    胭脂肉:'🥩'
-  }[p.meal] || '';
-
-  div.innerHTML = `
-    <div class="seat-name">${p.name}</div>
-
-    ${p.meal ? `
-      <div class="seat-meal">${mealIcon} ${p.meal}</div>
-    ` : ''}
-
-    ${p.note ? `
-      <div class="seat-note">${p.note}</div>
-    ` : ''}
-
-    <div class="status-buttons">
-
-      <button
-        class="status-btn ${p.status === '出席' ? 'active' : ''}"
-        onclick="event.stopPropagation(); setStatus('${p.id}','出席')">
-        出席
-      </button>
-
-      <button
-        class="status-btn ${p.status === '缺席' ? 'active' : ''}"
-        onclick="event.stopPropagation(); setStatus('${p.id}','缺席')">
-        缺席
-      </button>
-
-      <button
-        class="status-btn ${p.status === '固定缺席' ? 'active' : ''}"
-        onclick="event.stopPropagation(); setStatus('${p.id}','固定缺席')">
-        固定缺席
-      </button>
-
-    </div>
-  `;
-
-  div.addEventListener('dragstart', e => {
-    dragId = p.id;
-
-    setTimeout(() => {
-      div.classList.add('dragging');
-    }, 0);
-
-    e.dataTransfer.effectAllowed = 'move';
-  });
-
-  div.addEventListener('dragend', () => {
-
-    div.classList.remove('dragging');
-
-    document.querySelectorAll('.drag-over, .drag-over-zone')
-      .forEach(el => {
-        el.classList.remove('drag-over', 'drag-over-zone');
-      });
-  });
-
-  div.addEventListener('dragover', e => {
-    e.preventDefault();
-
-    if (div.dataset.id !== dragId) {
-      div.classList.add('drag-over');
-    }
-  });
-
-  div.addEventListener('dragleave', () => {
-    div.classList.remove('drag-over');
-  });
-
-  div.addEventListener('drop', e => {
-
-    e.preventDefault();
-
-    div.classList.remove('drag-over');
-
-    if (!dragId || dragId === p.id) return;
-
-    let fromItem = null;
-    let toItem = null;
-
-    let fromRowArr = null;
-    let toRowArr = null;
-
-    for (const row of ['a','b','bench']) {
-
-      const idx = state[row].findIndex(x => x.id === dragId);
-
-      if (idx !== -1) {
-        fromItem = state[row][idx];
-        fromRowArr = row;
-      }
-
-      const idx2 = state[row].findIndex(x => x.id === p.id);
-
-      if (idx2 !== -1) {
-        toItem = state[row][idx2];
-        toRowArr = row;
-      }
-    }
-
-    if (!fromItem || !toItem) return;
-
-    const fi = state[fromRowArr].indexOf(fromItem);
-    const ti = state[toRowArr].indexOf(toItem);
-
-    if (fromRowArr === toRowArr) {
-
-      state[fromRowArr].splice(fi, 1);
-
-      state[fromRowArr].splice(
-        fi < ti ? ti - 1 : ti,
-        0,
-        fromItem
-      );
-
-    } else {
-
-      state[fromRowArr].splice(fi, 1, toItem);
-
-      state[toRowArr].splice(ti, 1, fromItem);
-    }
-
-    saveState();
-    render();
-  });
-
-  return div;
+function saveLocal() {
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(guests));
 }
 
-function makeDropZone(rowId) {
+function statusClass(s) {
 
-  const zone = document.getElementById(
-    rowId === 'bench' ? 'bench' : `row-${rowId}`
-  );
+  if (s === '出席') return 's-coming';
 
-  zone.addEventListener('dragover', e => {
-    e.preventDefault();
-    zone.classList.add('drag-over-zone');
-  });
+  if (s === '缺席') return 's-absent';
 
-  zone.addEventListener('dragleave', e => {
+  if (s === '固定缺席') return 's-fixed';
 
-    if (!zone.contains(e.relatedTarget)) {
-      zone.classList.remove('drag-over-zone');
-    }
-  });
+  if (s === '已詢問') return 's-asked';
 
-  zone.addEventListener('drop', e => {
+  return 's-unknown';
+}
 
-    e.preventDefault();
+function cycleStatus(i) {
 
-    zone.classList.remove('drag-over-zone');
+  const order = [
+    '出席',
+    '缺席',
+    '固定缺席',
+    '待確認',
+    '已詢問'
+  ];
 
-    if (!dragId) return;
+  guests[i].status =
+    order[(order.indexOf(guests[i].status) + 1) % order.length];
 
-    let fromRowArr = null;
-    let fi = -1;
+  if (guests[i].status !== '出席') {
+    guests[i].bento = 0;
+  } else if (guests[i].bento === 0) {
+    guests[i].bento = 1;
+  }
 
-    for (const row of ['a','b','bench']) {
+  saveLocal();
 
-      const idx = state[row].findIndex(x => x.id === dragId);
+  render();
+}
 
-      if (idx !== -1) {
-        fromRowArr = row;
-        fi = idx;
-        break;
-      }
-    }
+function updateField(i, field, val) {
 
-    if (!fromRowArr || fi === -1) return;
+  guests[i][field] =
+    field === 'bento'
+      ? (parseInt(val) || 0)
+      : val;
 
-    if (fromRowArr === rowId) return;
+  saveLocal();
 
-    const item = state[fromRowArr].splice(fi, 1)[0];
+  updateStats();
+}
 
-    state[rowId].push(item);
+function delPerson(i) {
 
-    saveState();
+  if (confirm(`確定刪除「${guests[i].name}」？`)) {
+
+    guests.splice(i, 1);
+
+    saveLocal();
+
     render();
+  }
+}
+
+function addPerson() {
+
+  const name = document.getElementById('n-name').value.trim();
+
+  if (!name) {
+    showToast('請輸入姓名');
+    return;
+  }
+
+  guests.push({
+    name,
+    status: document.getElementById('n-status').value,
+    bento: parseInt(document.getElementById('n-bento').value) || 0,
+    note: document.getElementById('n-note').value.trim(),
+    phone: document.getElementById('n-phone').value.trim(),
   });
+
+  document.getElementById('n-name').value = '';
+  document.getElementById('n-note').value = '';
+  document.getElementById('n-phone').value = '';
+  document.getElementById('n-bento').value = '1';
+
+  saveLocal();
+
+  render();
+}
+
+function resetData() {
+
+  if (confirm('確定要重置？')) {
+
+    guests =
+      JSON.parse(JSON.stringify(DEFAULT_GUESTS));
+
+    saveLocal();
+
+    render();
+  }
+}
+
+function setFilter(f, el) {
+
+  curFilter = f;
+
+  document.querySelectorAll('.filter-btn')
+    .forEach(b => b.classList.remove('active'));
+
+  el.classList.add('active');
+
+  render();
+}
+
+function updateStats() {
+
+  const coming =
+    guests.filter(g => g.status === '出席');
+
+  document.getElementById('s-coming').textContent =
+    coming.length;
+
+  document.getElementById('s-bento').textContent =
+    coming.reduce((a, g) => a + g.bento, 0);
+
+  document.getElementById('s-absent').textContent =
+    guests.filter(g =>
+      g.status === '缺席' ||
+      g.status === '固定缺席'
+    ).length;
+
+  document.getElementById('s-unknown').textContent =
+    guests.filter(g => g.status === '待確認').length;
+
+  document.getElementById('s-asked').textContent =
+    guests.filter(g => g.status === '已詢問').length;
 }
 
 function render() {
 
-  ['a','b'].forEach(row => {
+  updateStats();
 
-    const el = document.getElementById(`row-${row}`);
+  const q =
+    document.getElementById('search')
+      .value
+      .trim()
+      .toLowerCase();
 
-    el.innerHTML = '';
+  let list =
+    guests.map((g, i) => ({...g, _i:i}));
 
-    state[row].forEach(p => {
-      el.appendChild(makeSeatEl(p, row));
+  if (curFilter !== 'all') {
+    list = list.filter(g => g.status === curFilter);
+  }
+
+  if (q) {
+
+    list = list.filter(g =>
+      g.name.toLowerCase().includes(q) ||
+      g.note.toLowerCase().includes(q)
+    );
+  }
+
+  const tb = document.getElementById('tbody');
+
+  tb.innerHTML = list.map(g => {
+
+    const ri = g._i;
+
+    const sc = statusClass(g.status);
+
+    return `
+      <tr>
+
+        <td>
+          <input
+            type="text"
+            value="${g.name}"
+            onchange="updateField(${ri},'name',this.value)"
+          >
+        </td>
+
+        <td>
+          <span
+            class="status-badge ${sc}"
+            onclick="cycleStatus(${ri})"
+          >
+            <span class="dot"></span>
+            ${g.status}
+          </span>
+        </td>
+
+        <td>
+          <input
+            type="number"
+            value="${g.bento}"
+            min="0"
+            max="20"
+            onchange="updateField(${ri},'bento',this.value)"
+            ${g.status !== '出席' ? 'disabled' : ''}
+          >
+        </td>
+
+        <td>
+          <input
+            type="text"
+            value="${g.note}"
+            onchange="updateField(${ri},'note',this.value)"
+          >
+        </td>
+
+        <td>
+          <input
+            type="text"
+            value="${g.phone}"
+            onchange="updateField(${ri},'phone',this.value)"
+          >
+        </td>
+
+        <td>
+          <button
+            class="del-btn"
+            onclick="delPerson(${ri})"
+          >
+            刪除
+          </button>
+        </td>
+
+      </tr>
+    `;
+
+  }).join('');
+}
+
+function exportCSV() {
+
+  const bom = '\uFEFF';
+
+  const hdr =
+    '姓名,出缺席狀態,便當數量,備註,聯絡電話\n';
+
+  const rows =
+    guests.map(g =>
+      `"${g.name}","${g.status}","${g.bento}","${g.note}","${g.phone}"`
+    ).join('\n');
+
+  const blob =
+    new Blob([bom + hdr + rows], {
+      type: 'text/csv;charset=utf-8'
     });
 
-    if (state[row].length === 0) {
+  const a = document.createElement('a');
 
-      const empty = document.createElement('div');
+  a.href = URL.createObjectURL(blob);
 
-      empty.className = 'seat-empty';
-      empty.textContent = '空位';
+  a.download = '午餐會來賓名單.csv';
 
-      el.appendChild(empty);
+  a.click();
+
+  showToast('CSV 匯出成功');
+}
+
+function copyText() {
+
+  const coming =
+    guests.filter(g => g.status === '出席');
+
+  const unknown =
+    guests.filter(g => g.status === '待確認');
+
+  const asked =
+    guests.filter(g => g.status === '已詢問');
+
+  const absent =
+    guests.filter(g =>
+      g.status === '缺席' ||
+      g.status === '固定缺席'
+    );
+
+  const bento =
+    coming.reduce((a, g) => a + g.bento, 0);
+
+  let txt = `5/18 午餐會來賓名單\n`;
+
+  txt += `${'─'.repeat(24)}\n`;
+
+  txt += `【出席 ${coming.length} 人 ／ 便當 ${bento} 個】\n`;
+
+  txt += coming.map(g =>
+    `• ${g.name}${g.note ? ' — ' + g.note : ''}`
+  ).join('\n');
+
+  if (asked.length) {
+
+    txt += `\n\n【已詢問 ${asked.length} 人】\n`;
+
+    txt += asked.map(g =>
+      `• ${g.name}`
+    ).join('\n');
+  }
+
+  if (unknown.length) {
+
+    txt += `\n\n【待確認 ${unknown.length} 人】\n`;
+
+    txt += unknown.map(g =>
+      `• ${g.name}`
+    ).join('\n');
+  }
+
+  if (absent.length) {
+
+    txt += `\n\n【缺席 / 固定缺席 ${absent.length} 人】\n`;
+
+    txt += absent.map(g =>
+      `• ${g.name}`
+    ).join('\n');
+  }
+
+  navigator.clipboard.writeText(txt);
+
+  showToast('已複製名單');
+}
+
+function showToast(msg) {
+
+  const t = document.getElementById('toast');
+
+  t.textContent = msg;
+
+  t.classList.add('show');
+
+  setTimeout(() => {
+    t.classList.remove('show');
+  }, 2200);
+}
+
+document.getElementById('n-name')
+  .addEventListener('keydown', e => {
+
+    if (e.key === 'Enter') {
+      addPerson();
     }
-
-    makeDropZone(row);
   });
 
-  const bench = document.getElementById('bench');
+init();
 
-  bench.innerHTML = '';
-
-  state.bench.forEach(p => {
-    bench.appendChild(makeSeatEl(p, 'bench'));
-  });
-
-  if (state.bench.length === 0) {
-
-    bench.innerHTML = `
-      <div style="font-size:12px;color:#bbb;padding:8px;">
-        拖曳座位到這裡暫存
-      </div>
-    `;
-  }
-
-  makeDropZone('bench');
-}
-
-state = loadState();
-render();
 </script>
-
-<style>
-@media print {
-
-  header .btn {
-    display: none;
-  }
-
-  .hint {
-    display: none;
-  }
-
-  body {
-    background: white;
-  }
-
-  .room,
-  .bench {
-    box-shadow: none;
-    border: 1px solid #ccc;
-  }
-}
-</style>
 
 </body>
 </html>
