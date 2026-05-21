@@ -179,13 +179,19 @@
       <button class="filter-btn" onclick="setFilter('BSH',this)">BSH</button>
     </div>
     <input type="text" class="search-box" id="search" placeholder="搜尋姓名 / 備註..." oninput="render()">
+  <select id="active-date" onchange="render()" style="font-family:'Noto Sans TC',sans-serif;font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none;cursor:pointer;">
+    <option value="status">主狀態（5/18）</option>
+    <option value="d522">5/22</option>
+    <option value="d525">5/25</option>
+    <option value="d529">5/29</option>
+  </select>
   </div>
 
   <div class="table-wrap">
     <table>
       <thead><tr>
         <th style="width:82px;">姓名</th>
-        <th style="width:90px;">5/18 狀態</th>
+        <th style="width:90px;" id="main-status-header">5/18 狀態</th>
         <th style="width:46px;">便當</th>
         <th style="min-width:120px;">備註</th>
         <th style="width:108px;">電話</th>
@@ -345,10 +351,17 @@ function dateSelectClass(s){
 }
 
 function cycleStatus(i){
-  const idx=ALL_STATUSES.indexOf(guests[i].status);
-  guests[i].status=ALL_STATUSES[(idx+1)%ALL_STATUSES.length];
-  if(guests[i].status!=='出席')guests[i].bento=0;
-  else if(guests[i].bento===0)guests[i].bento=1;
+  const activeDate=document.getElementById('active-date').value;
+  if(activeDate==='status'){
+    const idx=ALL_STATUSES.indexOf(guests[i].status);
+    guests[i].status=ALL_STATUSES[(idx+1)%ALL_STATUSES.length];
+    if(guests[i].status!=='出席')guests[i].bento=0;
+    else if(guests[i].bento===0)guests[i].bento=1;
+  } else {
+    const cur=guests[i][activeDate]||''
+    const idx=['', ...ALL_STATUSES].indexOf(cur);
+    guests[i][activeDate]=['', ...ALL_STATUSES][(idx+1)%(ALL_STATUSES.length+1)];
+  }
   saveLocal();scheduleAutoSync();render();
 }
 
@@ -421,7 +434,15 @@ function render(){
   const tb=document.getElementById('tbody');
   if(!list.length){tb.innerHTML='<tr><td colspan="9" class="empty">沒有符合條件的來賓</td></tr>';return;}
   tb.innerHTML=list.map(g=>{
-    const ri=g._i,sc=statusClass(g.status),isFixed=g.status==='固定缺席';
+    const ri=g._i;
+    const activeDate=document.getElementById('active-date').value;
+    const activeStatus=activeDate==='status'?g.status:(g[activeDate]||'—');
+    const sc=activeDate==='status'?statusClass(g.status):statusClass(g[activeDate]||'');
+    const isFixed=g.status==='固定缺席';
+    // update header label
+    const headerLabels={'status':'5/18 狀態','d522':'5/22 狀態','d525':'5/25 狀態','d529':'5/29 狀態'};
+    const hdr=document.getElementById('main-status-header');
+    if(hdr)hdr.textContent=headerLabels[activeDate]||'狀態';
     const dateFields=[['d522','5/22'],['d525','5/25'],['d529','5/29']];
     const dateCells=dateFields.map(([f])=>{
       const dc=dateSelectClass(g[f]);
@@ -429,7 +450,7 @@ function render(){
     }).join('');
     return '<tr class="'+(isFixed?'row-fixed':'')+'">'+
       '<td><input type="text" value="'+esc(g.name)+'" onchange="updateField('+ri+',\'name\',this.value)"></td>'+
-      '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+g.status+'</span></td>'+
+      '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+activeStatus+'</span></td>'+
       '<td><input type="number" value="'+g.bento+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(g.status!=='出席'?' disabled':'')+' ></td>'+
       '<td><input type="text" value="'+esc(g.note)+'" onchange="updateField('+ri+',\'note\',this.value)"></td>'+
       '<td><input type="text" value="'+esc(g.phone)+'" onchange="updateField('+ri+',\'phone\',this.value)"></td>'+
