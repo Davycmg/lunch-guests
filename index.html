@@ -408,16 +408,19 @@ function setFilter(f,el){
 }
 
 function updateStats(){
-  const coming=guests.filter(g=>g.status==='出席');
+  const sel=document.getElementById('active-date');
+  const activeDate=sel?sel.value:'status';
+  const getS=g=>activeDate==='status'?g.status:(g[activeDate]||'');
+  const coming=guests.filter(g=>getS(g)==='出席');
   document.getElementById('s-coming').textContent=coming.length;
-  document.getElementById('s-bento').textContent=coming.reduce((a,g)=>a+g.bento,0);
-  document.getElementById('s-absent').textContent=guests.filter(g=>g.status==='缺席').length;
-  document.getElementById('s-unknown').textContent=guests.filter(g=>g.status==='待確認').length;
-  document.getElementById('s-asked').textContent=guests.filter(g=>g.status==='已詢問').length;
-  document.getElementById('s-fixed').textContent=guests.filter(g=>g.status==='固定缺席').length;
-  document.getElementById('s-weekday').textContent=guests.filter(g=>g.status==='職場主日').length;
-  document.getElementById('s-morning').textContent=guests.filter(g=>g.status==='晨禱').length;
-  document.getElementById('s-rpg').textContent=guests.filter(g=>g.status==='RPG'||g.status==='BSH').length;
+  document.getElementById('s-bento').textContent=activeDate==='status'?coming.reduce((a,g)=>a+g.bento,0):'—';
+  document.getElementById('s-absent').textContent=guests.filter(g=>getS(g)==='缺席').length;
+  document.getElementById('s-unknown').textContent=guests.filter(g=>getS(g)==='待確認').length;
+  document.getElementById('s-asked').textContent=guests.filter(g=>getS(g)==='已詢問').length;
+  document.getElementById('s-fixed').textContent=guests.filter(g=>getS(g)==='固定缺席').length;
+  document.getElementById('s-weekday').textContent=guests.filter(g=>getS(g)==='職場主日').length;
+  document.getElementById('s-morning').textContent=guests.filter(g=>getS(g)==='晨禱').length;
+  document.getElementById('s-rpg').textContent=guests.filter(g=>getS(g)==='RPG'||getS(g)==='BSH').length;
 }
 
 function makeOptions(selected){
