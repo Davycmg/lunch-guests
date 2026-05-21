@@ -352,6 +352,7 @@ function dateSelectClass(s){
 
 function cycleStatus(i){
   const activeDate=document.getElementById('active-date').value;
+  guests[i].bento=parseInt(guests[i].bento)||0;
   if(activeDate==='status'){
     const idx=ALL_STATUSES.indexOf(guests[i].status);
     guests[i].status=ALL_STATUSES[(idx+1)%ALL_STATUSES.length];
@@ -454,7 +455,7 @@ function render(){
     return '<tr class="'+(isFixed?'row-fixed':'')+'">'+
       '<td><input type="text" value="'+esc(g.name)+'" onchange="updateField('+ri+',\'name\',this.value)"></td>'+
       '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+activeStatus+'</span></td>'+
-      '<td><input type="number" value="'+g.bento+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(g.status!=='出席'?' disabled':'')+' ></td>'+
+      '<td><input type="number" value="'+g.bento+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(g.status!=='出席'&&g.status!=='職場主日'&&g.status!=='晨禱'&&g.status!=='RPG'&&g.status!=='BSH'?' disabled':'')+' ></td>'+
       '<td><input type="text" value="'+esc(g.note)+'" onchange="updateField('+ri+',\'note\',this.value)"></td>'+
       '<td><input type="text" value="'+esc(g.phone)+'" onchange="updateField('+ri+',\'phone\',this.value)"></td>'+
       dateCells+
