@@ -455,7 +455,7 @@ function render(){
     return '<tr class="'+(isFixed?'row-fixed':'')+'">'+
       '<td><input type="text" value="'+esc(g.name)+'" onchange="updateField('+ri+',\'name\',this.value)"></td>'+
       '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+activeStatus+'</span></td>'+
-      '<td><input type="number" value="'+g.bento+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(g.status!=='出席'&&g.status!=='職場主日'&&g.status!=='晨禱'&&g.status!=='RPG'&&g.status!=='BSH'?' disabled':'')+' ></td>'+
+      '<td><input type="number" value="'+g.bento+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+((()=>{const s=activeDate==='status'?g.status:(g[activeDate]||'');return s!=='出席'&&s!=='職場主日'&&s!=='晨禱'&&s!=='RPG'&&s!=='BSH';})()?' disabled':'')+' ></td>'+
       '<td><input type="text" value="'+esc(g.note)+'" onchange="updateField('+ri+',\'note\',this.value)"></td>'+
       '<td><input type="text" value="'+esc(g.phone)+'" onchange="updateField('+ri+',\'phone\',this.value)"></td>'+
       dateCells+
