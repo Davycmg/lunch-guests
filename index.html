@@ -409,7 +409,7 @@ function updateStats(){
 
 function makeOptions(selected){
   return ['','出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH']
-    .map(v=>'<option value="'+v+'"'+(v===selected?' selected':'')+'>'+（v||'—')+'</option>').join('');
+    .map(v=>'<option value="'+v+'"'+(v===selected?' selected':'')+'>'+(v||'—')+'</option>').join('');
 }
 
 function render(){
