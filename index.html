@@ -24,9 +24,12 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
   header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px;}
+  .logo-wrap{display:flex;align-items:center;gap:10px;}
   .logo-title{font-size:16px;font-weight:700;cursor:pointer;}
   .logo-title:hover{text-decoration:underline;}
   .logo-sub{font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:1px;}
+  .date-input{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--blue);padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);outline:none;width:80px;text-align:center;}
+  .date-input:focus{border-color:var(--border-strong);background:var(--surface);}
   .sync-status{font-size:11px;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;}
   .sync-ok{background:var(--accent-light);color:var(--accent);}
   .sync-err{background:var(--red-light);color:var(--red);}
@@ -37,7 +40,7 @@
   .btn:hover{background:var(--bg);}.btn:active{transform:scale(0.98);}
   .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}.btn-primary:hover{background:#1e4420;}
   .btn-danger{color:var(--red);}
-  .main{max-width:1200px;margin:0 auto;padding:20px 16px;}
+  .main{max-width:900px;margin:0 auto;padding:20px 16px;}
   .setup-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:none;}
   .setup-panel.show{display:block;}
   .setup-panel h3{font-size:13px;font-weight:700;margin-bottom:10px;}
@@ -65,15 +68,13 @@
   .filter-btn.active{background:var(--text);color:#fff;}
   .search-box{font-family:'Noto Sans TC',sans-serif;font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);width:140px;outline:none;}
   .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto;}
-  table{width:100%;border-collapse:collapse;min-width:900px;}
+  table{width:100%;border-collapse:collapse;}
   thead th{background:var(--bg);font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
-  thead th.date-col{background:#F0EDE6;text-align:center;color:var(--blue);border-left:1px solid var(--border);}
   tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
   tbody tr:last-child{border-bottom:none;}
   tbody tr:hover{background:var(--bg);}
   tbody tr.row-fixed{opacity:0.4;}
   td{padding:6px 10px;vertical-align:middle;font-size:13px;}
-  td.date-td{border-left:1px solid var(--border);padding:4px 6px;text-align:center;}
   td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:12px;padding:3px 6px;border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;color:var(--text);width:100%;outline:none;transition:all 0.15s;}
   td input[type=text]:hover,td input[type=number]:hover{border-color:var(--border);background:var(--surface);}
   td input[type=text]:focus,td input[type=number]:focus{border-color:var(--border-strong);background:var(--surface);}
@@ -91,17 +92,6 @@
   .s-morning{background:var(--orange-light);color:var(--orange);}
   .s-rpg{background:var(--pink-light);color:var(--pink);}
   .s-bsh{background:var(--indigo-light);color:var(--indigo);}
-  .date-select{font-family:'Noto Sans TC',sans-serif;font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);cursor:pointer;outline:none;width:76px;}
-  .date-select:focus{border-color:var(--border-strong);}
-  .date-select.ds-coming{background:var(--accent-light);color:var(--accent);border-color:#b8d8b8;}
-  .date-select.ds-absent{background:var(--red-light);color:var(--red);border-color:#f0c0c0;}
-  .date-select.ds-unknown{background:var(--amber-light);color:var(--amber);border-color:#e8d090;}
-  .date-select.ds-asked{background:var(--purple-light);color:var(--purple);border-color:#c8aaee;}
-  .date-select.ds-fixed{background:var(--gray-light);color:var(--gray);border-color:#ccc;}
-  .date-select.ds-weekday{background:var(--teal-light);color:var(--teal);border-color:#90d0d0;}
-  .date-select.ds-morning{background:var(--orange-light);color:var(--orange);border-color:#e8c090;}
-  .date-select.ds-rpg{background:var(--pink-light);color:var(--pink);border-color:#e0a0cc;}
-  .date-select.ds-bsh{background:var(--indigo-light);color:var(--indigo);border-color:#a0b0e0;}
   .del-btn{font-size:11px;padding:2px 7px;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.15s;}
   .del-btn:hover{border-color:var(--red);background:var(--red-light);color:var(--red);}
   .add-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-top:12px;}
@@ -117,9 +107,12 @@
 <body>
 
 <header>
-  <div>
-    <div class="logo-title" onclick="toggleSetup()" title="點此設定">⚙ 5/22 午餐會 來賓管理</div>
-    <div class="logo-sub">曾獻瑩議員辦公室</div>
+  <div class="logo-wrap">
+    <div>
+      <div class="logo-title" onclick="toggleSetup()" title="點此設定">⚙ 午餐會 來賓管理</div>
+      <div class="logo-sub">曾獻瑩議員辦公室</div>
+    </div>
+    <input type="text" class="date-input" id="current-date" value="5/22" onchange="updateDateLabel()" title="點此修改日期">
   </div>
   <div class="header-actions">
     <span class="sync-status sync-none" id="sync-status">未連線</span>
@@ -166,23 +159,16 @@
       <button class="filter-btn" onclick="setFilter('BSH',this)">BSH</button>
     </div>
     <input type="text" class="search-box" id="search" placeholder="搜尋姓名 / 備註..." oninput="render()">
-  <select id="active-date" onchange="render()" style="font-family:'Noto Sans TC',sans-serif;font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none;cursor:pointer;">
-    <option value="status">主狀態（5/22）</option>
-    <option value="d525">5/25</option>
-    <option value="d529">5/29</option>
-  </select>
   </div>
 
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:82px;">姓名</th>
-        <th style="width:90px;" id="main-status-header">5/22 狀態</th>
+        <th style="width:88px;">姓名</th>
+        <th style="width:100px;" id="th-status">5/22 狀態</th>
         <th style="width:46px;">便當</th>
-        <th style="min-width:120px;">備註</th>
+        <th>備註</th>
         <th style="width:108px;">電話</th>
-        <th class="date-col" style="width:84px;">5/25</th>
-        <th class="date-col" style="width:84px;">5/29</th>
         <th style="width:42px;"></th>
       </tr></thead>
       <tbody id="tbody"></tbody>
@@ -215,44 +201,44 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const LOCAL_KEY='lunch-guests-v5';
+const LOCAL_KEY='lunch-guests-v6';
 const GAS_KEY='lunch-gas-url';
+const DATE_KEY='lunch-current-date';
 const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbxkc7ixGzBxrE5Mo90oELhquakCbSQXlV6SEwemMlYcpCtF-Py5C9_9clyyKnxpYxK2uQ/exec';
 
 const ALL_STATUSES=['出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH'];
 
-// 5/22 狀態根據截圖更新
 const DEFAULT_GUESTS=[
-  {name:"彥漢8872",status:"缺席",    bento:0,note:"脆皮雞",phone:"0920-856-700",d525:"",d529:""},
-  {name:"秀華",    status:"出席",    bento:1,note:"張淑惠 關崇仁 林湛",phone:"",d525:"",d529:""},
-  {name:"雅雯4997",status:"出席",    bento:1,note:"海南雞",phone:"",d525:"",d529:""},
-  {name:"豪雷",    status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"天維",    status:"出席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"銓興哥",  status:"出席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"林湛",    status:"出席",    bento:1,note:"",phone:"",d525:"",d529:""},
-  {name:"關崇仁",  status:"待確認",  bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"吉昇",    status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"莊敬",    status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"美玲",    status:"待確認",  bento:1,note:"",phone:"",d525:"",d529:""},
-  {name:"佳頤",    status:"待確認",  bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"冠禎",    status:"待確認",  bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"宗諺",    status:"固定缺席",bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"懿恬",    status:"固定缺席",bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"閔翔",    status:"固定缺席",bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"鴻華",    status:"固定缺席",bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"政宏",    status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"黎大哥",  status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"大衛",    status:"出席",    bento:1,note:"",phone:"",d525:"",d529:""},
-  {name:"麗文8815",status:"出席",    bento:1,note:"8815 璊莉 4511",phone:"",d525:"",d529:""},
-  {name:"守愚",    status:"固定缺席",bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"欣美姐",  status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"俊維",    status:"缺席",    bento:0,note:"隔週值班",phone:"",d525:"",d529:""},
-  {name:"家銘",    status:"缺席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"世德",    status:"固定缺席",bento:0,note:"當兵",phone:"",d525:"固定缺席",d529:"固定缺席"},
-  {name:"士斌",    status:"固定缺席",bento:0,note:"放療",phone:"",d525:"固定缺席",d529:"固定缺席"},
-  {name:"Cindy姐", status:"出席",    bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"淑慧",    status:"固定缺席",bento:0,note:"",phone:"",d525:"",d529:""},
-  {name:"顏志龍",  status:"出席",    bento:1,note:"",phone:"",d525:"",d529:""},
+  {name:"彥漢8872",status:"缺席",    bento:0,note:"脆皮雞",   phone:"0920-856-700"},
+  {name:"秀華",    status:"出席",    bento:1,note:"腿庫",     phone:""},
+  {name:"雅雯4997",status:"出席",    bento:1,note:"",         phone:""},
+  {name:"豪雷",    status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"天維",    status:"出席",    bento:0,note:"",         phone:""},
+  {name:"銓興哥",  status:"出席",    bento:0,note:"",         phone:""},
+  {name:"林湛",    status:"出席",    bento:1,note:"腿庫",     phone:""},
+  {name:"關崇仁",  status:"出席",    bento:1,note:"腿庫",     phone:""},
+  {name:"吉昇",    status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"莊敬",    status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"美玲",    status:"待確認",  bento:0,note:"",         phone:""},
+  {name:"佳頤",    status:"待確認",  bento:0,note:"",         phone:""},
+  {name:"冠禎",    status:"待確認",  bento:0,note:"",         phone:""},
+  {name:"宗諺",    status:"固定缺席",bento:0,note:"",         phone:""},
+  {name:"懿恬",    status:"固定缺席",bento:0,note:"",         phone:""},
+  {name:"閔翔",    status:"固定缺席",bento:0,note:"",         phone:""},
+  {name:"鴻華",    status:"固定缺席",bento:0,note:"",         phone:""},
+  {name:"政宏",    status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"黎大哥",  status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"大衛",    status:"出席",    bento:1,note:"烤魚",     phone:""},
+  {name:"麗文8815",status:"出席",    bento:1,note:"腿庫麵",   phone:""},
+  {name:"守愚",    status:"固定缺席",bento:0,note:"",         phone:""},
+  {name:"欣美姐",  status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"俊維",    status:"缺席",    bento:0,note:"隔週值班", phone:""},
+  {name:"家銘",    status:"缺席",    bento:0,note:"",         phone:""},
+  {name:"世德",    status:"固定缺席",bento:0,note:"當兵",     phone:""},
+  {name:"士斌",    status:"固定缺席",bento:0,note:"放療",     phone:""},
+  {name:"Cindy姐", status:"出席",    bento:0,note:"",         phone:""},
+  {name:"淑慧",    status:"固定缺席",bento:0,note:"",         phone:""},
+  {name:"顏志龍",  status:"出席",    bento:1,note:"烤魚",     phone:""},
 ];
 
 let guests=[],curFilter='all',gasUrl='';
@@ -260,7 +246,16 @@ let guests=[],curFilter='all',gasUrl='';
 function init(){
   gasUrl=localStorage.getItem(GAS_KEY)||HARDCODED_GAS_URL;
   document.getElementById('gas-url').value=gasUrl;
+  const savedDate=localStorage.getItem(DATE_KEY);
+  if(savedDate)document.getElementById('current-date').value=savedDate;
+  updateDateLabel();
   syncFromSheet(true);
+}
+
+function updateDateLabel(){
+  const d=document.getElementById('current-date').value.trim();
+  localStorage.setItem(DATE_KEY,d);
+  document.getElementById('th-status').textContent=d+' 狀態';
 }
 
 function saveLocal(){try{localStorage.setItem(LOCAL_KEY,JSON.stringify(guests));}catch(e){}}
@@ -294,8 +289,8 @@ async function syncFromSheet(silent=false){
     const res=await fetch(gasUrl+'?action=read');
     const data=await res.json();
     if(data.ok&&data.guests.length>0){
-      guests=data.guests.map(g=>({d525:'',d529:'',...g}));
-      saveLocal();render();setSyncStatus('ok','✓ 已同步');
+      guests=data.guests;saveLocal();render();
+      setSyncStatus('ok','✓ 已同步');
       if(!silent)showToast('載入成功，共 '+guests.length+' 人');
     }else{
       loadLocal();render();setSyncStatus('ok','雲端無資料');
@@ -305,7 +300,7 @@ async function syncFromSheet(silent=false){
 }
 
 function loadLocal(){
-  try{const s=localStorage.getItem(LOCAL_KEY);guests=s?JSON.parse(s).map(g=>({d525:'',d529:'',...g})):JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
+  try{const s=localStorage.getItem(LOCAL_KEY);guests=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
   catch(e){guests=JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
 }
 
@@ -332,37 +327,19 @@ function statusClass(s){
   return 's-unknown';
 }
 
-function dateSelectClass(s){
-  if(!s)return '';
-  return 'ds-'+statusClass(s).replace('s-','');
-}
-
 function cycleStatus(i){
-  const activeDate=document.getElementById('active-date').value;
   guests[i].bento=parseInt(guests[i].bento)||0;
-  if(activeDate==='status'){
-    const idx=ALL_STATUSES.indexOf(guests[i].status);
-    guests[i].status=ALL_STATUSES[(idx+1)%ALL_STATUSES.length];
-    if(guests[i].status!=='出席')guests[i].bento=0;
-    else if(guests[i].bento===0)guests[i].bento=1;
-  }else{
-    const cur=guests[i][activeDate]||'';
-    const idx=['', ...ALL_STATUSES].indexOf(cur);
-    guests[i][activeDate]=['', ...ALL_STATUSES][(idx+1)%(ALL_STATUSES.length+1)];
-  }
+  const idx=ALL_STATUSES.indexOf(guests[i].status);
+  guests[i].status=ALL_STATUSES[(idx+1)%ALL_STATUSES.length];
+  const canBento=['出席','職場主日','晨禱','RPG','BSH'].includes(guests[i].status);
+  if(!canBento)guests[i].bento=0;
+  else if(guests[i].bento===0)guests[i].bento=1;
   saveLocal();scheduleAutoSync();render();
 }
 
 function updateField(i,field,val){
   guests[i][field]=field==='bento'?(parseInt(val)||0):val;
   saveLocal();scheduleAutoSync();updateStats();
-}
-
-function updateDateField(i,field,val){
-  guests[i][field]=val;
-  saveLocal();scheduleAutoSync();
-  const sel=document.getElementById('sel-'+field+'-'+i);
-  if(sel)sel.className='date-select '+dateSelectClass(val);
 }
 
 function delPerson(i){
@@ -374,7 +351,7 @@ function delPerson(i){
 function addPerson(){
   const name=document.getElementById('n-name').value.trim();
   if(!name){showToast('請輸入姓名');return;}
-  guests.push({name,status:document.getElementById('n-status').value,bento:parseInt(document.getElementById('n-bento').value)||0,note:document.getElementById('n-note').value.trim(),phone:document.getElementById('n-phone').value.trim(),d525:'',d529:''});
+  guests.push({name,status:document.getElementById('n-status').value,bento:parseInt(document.getElementById('n-bento').value)||0,note:document.getElementById('n-note').value.trim(),phone:document.getElementById('n-phone').value.trim()});
   document.getElementById('n-name').value='';document.getElementById('n-note').value='';
   document.getElementById('n-phone').value='';document.getElementById('n-bento').value='1';
   saveLocal();scheduleAutoSync();showToast('已新增「'+name+'」');render();
@@ -394,24 +371,16 @@ function setFilter(f,el){
 }
 
 function updateStats(){
-  const sel=document.getElementById('active-date');
-  const activeDate=sel?sel.value:'status';
-  const getS=g=>activeDate==='status'?g.status:(g[activeDate]||'');
-  const coming=guests.filter(g=>getS(g)==='出席');
+  const coming=guests.filter(g=>g.status==='出席');
   document.getElementById('s-coming').textContent=coming.length;
   document.getElementById('s-bento').textContent=coming.reduce((a,g)=>a+(parseInt(g.bento)||0),0);
-  document.getElementById('s-absent').textContent=guests.filter(g=>getS(g)==='缺席').length;
-  document.getElementById('s-unknown').textContent=guests.filter(g=>getS(g)==='待確認').length;
-  document.getElementById('s-asked').textContent=guests.filter(g=>getS(g)==='已詢問').length;
-  document.getElementById('s-fixed').textContent=guests.filter(g=>getS(g)==='固定缺席').length;
-  document.getElementById('s-weekday').textContent=guests.filter(g=>getS(g)==='職場主日').length;
-  document.getElementById('s-morning').textContent=guests.filter(g=>getS(g)==='晨禱').length;
-  document.getElementById('s-rpg').textContent=guests.filter(g=>getS(g)==='RPG'||getS(g)==='BSH').length;
-}
-
-function makeOptions(selected){
-  return ['','出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH']
-    .map(v=>'<option value="'+v+'"'+(v===selected?' selected':'')+'>'+(v||'—')+'</option>').join('');
+  document.getElementById('s-absent').textContent=guests.filter(g=>g.status==='缺席').length;
+  document.getElementById('s-unknown').textContent=guests.filter(g=>g.status==='待確認').length;
+  document.getElementById('s-asked').textContent=guests.filter(g=>g.status==='已詢問').length;
+  document.getElementById('s-fixed').textContent=guests.filter(g=>g.status==='固定缺席').length;
+  document.getElementById('s-weekday').textContent=guests.filter(g=>g.status==='職場主日').length;
+  document.getElementById('s-morning').textContent=guests.filter(g=>g.status==='晨禱').length;
+  document.getElementById('s-rpg').textContent=guests.filter(g=>g.status==='RPG'||g.status==='BSH').length;
 }
 
 function render(){
@@ -421,29 +390,16 @@ function render(){
   if(curFilter!=='all')list=list.filter(g=>g.status===curFilter);
   if(q)list=list.filter(g=>g.name.toLowerCase().includes(q)||g.note.toLowerCase().includes(q));
   const tb=document.getElementById('tbody');
-  if(!list.length){tb.innerHTML='<tr><td colspan="8" class="empty">沒有符合條件的來賓</td></tr>';return;}
-  const headerLabels={'status':'5/22 狀態','d525':'5/25 狀態','d529':'5/29 狀態'};
-  const hdr=document.getElementById('main-status-header');
-  const activeDate=document.getElementById('active-date').value;
-  if(hdr)hdr.textContent=headerLabels[activeDate]||'狀態';
+  if(!list.length){tb.innerHTML='<tr><td colspan="6" class="empty">沒有符合條件的來賓</td></tr>';return;}
   tb.innerHTML=list.map(g=>{
-    const ri=g._i;
-    const activeStatus=activeDate==='status'?g.status:(g[activeDate]||'—');
-    const sc=activeDate==='status'?statusClass(g.status):statusClass(g[activeDate]||'');
-    const isFixed=g.status==='固定缺席';
-    const dateFields=[['d525','5/25'],['d529','5/29']];
-    const dateCells=dateFields.map(([f])=>{
-      const dc=dateSelectClass(g[f]);
-      return '<td class="date-td"><select id="sel-'+f+'-'+ri+'" class="date-select '+dc+'" onchange="updateDateField('+ri+',\''+f+'\',this.value)">'+makeOptions(g[f])+'</select></td>';
-    }).join('');
-    const bentoDisabled=(()=>{const s=activeDate==='status'?g.status:(g[activeDate]||'');return s!=='出席'&&s!=='職場主日'&&s!=='晨禱'&&s!=='RPG'&&s!=='BSH';})();
+    const ri=g._i,sc=statusClass(g.status),isFixed=g.status==='固定缺席';
+    const canBento=['出席','職場主日','晨禱','RPG','BSH'].includes(g.status);
     return '<tr class="'+(isFixed?'row-fixed':'')+'">'+
       '<td><input type="text" value="'+esc(g.name)+'" onchange="updateField('+ri+',\'name\',this.value)"></td>'+
-      '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+activeStatus+'</span></td>'+
-      '<td><input type="number" value="'+(parseInt(g.bento)||0)+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(bentoDisabled?' disabled':'')+' ></td>'+
+      '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+g.status+'</span></td>'+
+      '<td><input type="number" value="'+(parseInt(g.bento)||0)+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(canBento?'':' disabled')+' ></td>'+
       '<td><input type="text" value="'+esc(g.note)+'" onchange="updateField('+ri+',\'note\',this.value)"></td>'+
       '<td><input type="text" value="'+esc(g.phone)+'" onchange="updateField('+ri+',\'phone\',this.value)"></td>'+
-      dateCells+
       '<td><button class="del-btn" onclick="delPerson('+ri+')">刪除</button></td>'+
       '</tr>';
   }).join('');
@@ -451,30 +407,31 @@ function render(){
 
 function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
+function getDate(){return document.getElementById('current-date').value.trim()||'午餐會';}
+
 function exportCSV(){
-  const bom='\uFEFF',hdr='姓名,5/22狀態,便當,備註,電話,5/25,5/29\n';
-  const rows=guests.map(g=>'"'+[g.name,g.status,parseInt(g.bento)||0,g.note,g.phone,g.d525||'',g.d529||''].join('","')+'"').join('\n');
+  const d=getDate();
+  const bom='\uFEFF',hdr='姓名,狀態,便當,備註,電話\n';
+  const rows=guests.map(g=>'"'+[g.name,g.status,parseInt(g.bento)||0,g.note,g.phone].join('","')+'"').join('\n');
   const blob=new Blob([bom+hdr+rows],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='午餐會來賓名單_0522.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='午餐會來賓名單_'+d.replace('/','_')+'.csv';a.click();
   showToast('CSV 匯出成功');
 }
 
 function copyText(){
-  const sel=document.getElementById('active-date');
-  const activeDate=sel?sel.value:'status';
-  const dateLabel={'status':'5/22','d525':'5/25','d529':'5/29'}[activeDate]||'';
-  const getS=g=>activeDate==='status'?g.status:(g[activeDate]||'');
-  const coming=guests.filter(g=>getS(g)==='出席');
-  const asked=guests.filter(g=>getS(g)==='已詢問');
-  const unknown=guests.filter(g=>getS(g)==='待確認');
-  const absent=guests.filter(g=>getS(g)==='缺席');
-  const fixed=guests.filter(g=>getS(g)==='固定缺席');
-  const weekday=guests.filter(g=>getS(g)==='職場主日');
-  const morning=guests.filter(g=>getS(g)==='晨禱');
-  const rpg=guests.filter(g=>getS(g)==='RPG');
-  const bsh=guests.filter(g=>getS(g)==='BSH');
+  const d=getDate();
+  const coming=guests.filter(g=>g.status==='出席');
+  const asked=guests.filter(g=>g.status==='已詢問');
+  const unknown=guests.filter(g=>g.status==='待確認');
+  const absent=guests.filter(g=>g.status==='缺席');
+  const fixed=guests.filter(g=>g.status==='固定缺席');
+  const weekday=guests.filter(g=>g.status==='職場主日');
+  const morning=guests.filter(g=>g.status==='晨禱');
+  const rpg=guests.filter(g=>g.status==='RPG');
+  const bsh=guests.filter(g=>g.status==='BSH');
   const bento=coming.reduce((a,g)=>a+(parseInt(g.bento)||0),0);
-  let txt=dateLabel+' 午餐會來賓名單\n'+'─'.repeat(24)+'\n';
+  let txt=d+' 午餐會來賓名單\n'+'─'.repeat(24)+'\n';
   txt+='【出席 '+coming.length+' 人 ／ 便當 '+bento+' 個】\n';
   txt+=coming.map(g=>'• '+g.name+(g.bento>1?'（便當×'+g.bento+'）':'')+(g.note?' — '+g.note:'')).join('\n');
   if(asked.length){txt+='\n\n【已詢問 '+asked.length+' 人】\n';txt+=asked.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
