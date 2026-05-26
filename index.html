@@ -19,6 +19,8 @@
     --pink:#8B1A5A;--pink-light:#FAE8F3;
     --orange:#7A3500;--orange-light:#FDF0E3;
     --indigo:#2D3A8C;--indigo-light:#EAF0FB;
+    --green2:#1A5C3A;--green2-light:#E0F2E9;
+    --violet:#5C1A8C;--violet-light:#F0E0F8;
     --radius:10px;--radius-sm:6px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -93,6 +95,8 @@
   .ss-morning{background:var(--orange-light);color:var(--orange);border-color:#e8c090;}
   .ss-rpg{background:var(--pink-light);color:var(--pink);border-color:#e0a0cc;}
   .ss-bsh{background:var(--indigo-light);color:var(--indigo);border-color:#a0b0e0;}
+  .ss-alpha{background:var(--green2-light);color:var(--green2);border-color:#90d0b0;}
+  .ss-prayer{background:var(--violet-light);color:var(--violet);border-color:#c0a0e0;}
 
   .del-btn{font-size:11px;padding:2px 7px;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.15s;}
   .del-btn:hover{border-color:var(--red);background:var(--red-light);color:var(--red);}
@@ -159,6 +163,8 @@
       <button class="filter-btn" onclick="setFilter('晨禱',this)">晨禱</button>
       <button class="filter-btn" onclick="setFilter('RPG',this)">RPG</button>
       <button class="filter-btn" onclick="setFilter('BSH',this)">BSH</button>
+      <button class="filter-btn" onclick="setFilter('啟發',this)">啟發</button>
+      <button class="filter-btn" onclick="setFilter('禱告會',this)">禱告會</button>
     </div>
     <input type="text" class="search-box" id="search" placeholder="搜尋姓名 / 備註..." oninput="render()">
   </div>
@@ -191,6 +197,8 @@
         <option value="晨禱">晨禱</option>
         <option value="RPG">RPG</option>
         <option value="BSH">BSH</option>
+        <option value="啟發">啟發</option>
+        <option value="禱告會">禱告會</option>
       </select>
       <input class="f-bento" type="number" id="n-bento" value="1" min="0" max="20">
       <input class="f-note" type="text" id="n-note" placeholder="備註">
@@ -203,19 +211,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const LOCAL_KEY='lunch-guests-v7';
+const LOCAL_KEY='lunch-guests-v8';
 const GAS_KEY='lunch-gas-url';
 const DATE_KEY='lunch-current-date';
 const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbxkc7ixGzBxrE5Mo90oELhquakCbSQXlV6SEwemMlYcpCtF-Py5C9_9clyyKnxpYxK2uQ/exec';
 
-const ALL_STATUSES=['出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH'];
+const ALL_STATUSES=['出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH','啟發','禱告會'];
 
 const STATUS_CLASS={
   '出席':'ss-coming','缺席':'ss-absent','待確認':'ss-unknown','已詢問':'ss-asked',
-  '固定缺席':'ss-fixed','職場主日':'ss-weekday','晨禱':'ss-morning','RPG':'ss-rpg','BSH':'ss-bsh'
+  '固定缺席':'ss-fixed','職場主日':'ss-weekday','晨禱':'ss-morning','RPG':'ss-rpg','BSH':'ss-bsh','啟發':'ss-alpha','禱告會':'ss-prayer'
 };
 
-const CAN_BENTO=new Set(['出席','職場主日','晨禱','RPG','BSH']);
+const CAN_BENTO=new Set(['出席','職場主日','晨禱','RPG','BSH','啟發','禱告會']);
 
 const DEFAULT_GUESTS=[
   {name:"彥漢8872",status:"缺席",    bento:0,note:"脆皮雞",   phone:"0920-856-700"},
@@ -425,7 +433,7 @@ function copyText(){
   const d=getDate();
   const g2=s=>guests.filter(g=>g.status===s);
   const coming=g2('出席'),bento=coming.reduce((a,g)=>a+(parseInt(g.bento)||0),0);
-  const grps=[['已詢問'],['待確認'],['缺席'],['固定缺席'],['職場主日'],['晨禱'],['RPG'],['BSH']];
+  const grps=[['已詢問'],['待確認'],['缺席'],['固定缺席'],['職場主日'],['晨禱'],['RPG'],['BSH'],['啟發'],['禱告會']];
   let txt=d+' 午餐會來賓名單\n'+'─'.repeat(24)+'\n';
   txt+='【出席 '+coming.length+' 人 ／ 便當 '+bento+' 個】\n';
   txt+=coming.map(g=>'• '+g.name+(parseInt(g.bento)>1?'（便當×'+g.bento+'）':'')+(g.note?' — '+g.note:'')).join('\n');
