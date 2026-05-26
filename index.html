@@ -74,24 +74,26 @@
   tbody tr:last-child{border-bottom:none;}
   tbody tr:hover{background:var(--bg);}
   tbody tr.row-fixed{opacity:0.4;}
-  td{padding:6px 10px;vertical-align:middle;font-size:13px;}
+  td{padding:5px 10px;vertical-align:middle;font-size:13px;}
   td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:12px;padding:3px 6px;border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;color:var(--text);width:100%;outline:none;transition:all 0.15s;}
   td input[type=text]:hover,td input[type=number]:hover{border-color:var(--border);background:var(--surface);}
   td input[type=text]:focus,td input[type=number]:focus{border-color:var(--border-strong);background:var(--surface);}
   td input[type=number]{width:48px;text-align:center;}
   td input:disabled{opacity:0.3;pointer-events:none;}
-  .status-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;cursor:pointer;user-select:none;transition:all 0.15s;white-space:nowrap;}
-  .status-badge:hover{opacity:0.8;}.status-badge:active{transform:scale(0.96);}
-  .dot{width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;}
-  .s-coming{background:var(--accent-light);color:var(--accent);}
-  .s-absent{background:var(--red-light);color:var(--red);}
-  .s-unknown{background:var(--amber-light);color:var(--amber);}
-  .s-asked{background:var(--purple-light);color:var(--purple);}
-  .s-fixed{background:var(--gray-light);color:var(--gray);}
-  .s-weekday{background:var(--teal-light);color:var(--teal);}
-  .s-morning{background:var(--orange-light);color:var(--orange);}
-  .s-rpg{background:var(--pink-light);color:var(--pink);}
-  .s-bsh{background:var(--indigo-light);color:var(--indigo);}
+
+  /* Status select */
+  .status-select{font-family:'Noto Sans TC',sans-serif;font-size:11px;font-weight:500;padding:3px 6px;border-radius:20px;border:1px solid transparent;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;text-align:center;transition:all 0.15s;width:90px;}
+  .status-select:focus{box-shadow:0 0 0 2px rgba(44,95,46,0.15);}
+  .ss-coming{background:var(--accent-light);color:var(--accent);border-color:#b8d8b8;}
+  .ss-absent{background:var(--red-light);color:var(--red);border-color:#f0c0c0;}
+  .ss-unknown{background:var(--amber-light);color:var(--amber);border-color:#e8d090;}
+  .ss-asked{background:var(--purple-light);color:var(--purple);border-color:#c8aaee;}
+  .ss-fixed{background:var(--gray-light);color:var(--gray);border-color:#ccc;}
+  .ss-weekday{background:var(--teal-light);color:var(--teal);border-color:#90d0d0;}
+  .ss-morning{background:var(--orange-light);color:var(--orange);border-color:#e8c090;}
+  .ss-rpg{background:var(--pink-light);color:var(--pink);border-color:#e0a0cc;}
+  .ss-bsh{background:var(--indigo-light);color:var(--indigo);border-color:#a0b0e0;}
+
   .del-btn{font-size:11px;padding:2px 7px;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.15s;}
   .del-btn:hover{border-color:var(--red);background:var(--red-light);color:var(--red);}
   .add-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-top:12px;}
@@ -164,8 +166,8 @@
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:88px;">姓名</th>
-        <th style="width:100px;" id="th-status">5/22 狀態</th>
+        <th style="width:92px;">姓名</th>
+        <th style="width:108px;" id="th-status">5/22 狀態</th>
         <th style="width:46px;">便當</th>
         <th>備註</th>
         <th style="width:108px;">電話</th>
@@ -201,12 +203,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const LOCAL_KEY='lunch-guests-v6';
+const LOCAL_KEY='lunch-guests-v7';
 const GAS_KEY='lunch-gas-url';
 const DATE_KEY='lunch-current-date';
 const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbxkc7ixGzBxrE5Mo90oELhquakCbSQXlV6SEwemMlYcpCtF-Py5C9_9clyyKnxpYxK2uQ/exec';
 
 const ALL_STATUSES=['出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH'];
+
+const STATUS_CLASS={
+  '出席':'ss-coming','缺席':'ss-absent','待確認':'ss-unknown','已詢問':'ss-asked',
+  '固定缺席':'ss-fixed','職場主日':'ss-weekday','晨禱':'ss-morning','RPG':'ss-rpg','BSH':'ss-bsh'
+};
+
+const CAN_BENTO=new Set(['出席','職場主日','晨禱','RPG','BSH']);
 
 const DEFAULT_GUESTS=[
   {name:"彥漢8872",status:"缺席",    bento:0,note:"脆皮雞",   phone:"0920-856-700"},
@@ -315,24 +324,10 @@ async function syncToSheet(silent=false){
   }catch(e){setSyncStatus('err','同步失敗');if(!silent)showToast('儲存失敗：'+e.message);}
 }
 
-function statusClass(s){
-  if(s==='出席')return 's-coming';
-  if(s==='缺席')return 's-absent';
-  if(s==='已詢問')return 's-asked';
-  if(s==='固定缺席')return 's-fixed';
-  if(s==='職場主日')return 's-weekday';
-  if(s==='晨禱')return 's-morning';
-  if(s==='RPG')return 's-rpg';
-  if(s==='BSH')return 's-bsh';
-  return 's-unknown';
-}
-
-function cycleStatus(i){
+function updateStatus(i,val){
+  guests[i].status=val;
   guests[i].bento=parseInt(guests[i].bento)||0;
-  const idx=ALL_STATUSES.indexOf(guests[i].status);
-  guests[i].status=ALL_STATUSES[(idx+1)%ALL_STATUSES.length];
-  const canBento=['出席','職場主日','晨禱','RPG','BSH'].includes(guests[i].status);
-  if(!canBento)guests[i].bento=0;
+  if(!CAN_BENTO.has(val))guests[i].bento=0;
   else if(guests[i].bento===0)guests[i].bento=1;
   saveLocal();scheduleAutoSync();render();
 }
@@ -351,7 +346,9 @@ function delPerson(i){
 function addPerson(){
   const name=document.getElementById('n-name').value.trim();
   if(!name){showToast('請輸入姓名');return;}
-  guests.push({name,status:document.getElementById('n-status').value,bento:parseInt(document.getElementById('n-bento').value)||0,note:document.getElementById('n-note').value.trim(),phone:document.getElementById('n-phone').value.trim()});
+  const status=document.getElementById('n-status').value;
+  const bento=CAN_BENTO.has(status)?(parseInt(document.getElementById('n-bento').value)||0):0;
+  guests.push({name,status,bento,note:document.getElementById('n-note').value.trim(),phone:document.getElementById('n-phone').value.trim()});
   document.getElementById('n-name').value='';document.getElementById('n-note').value='';
   document.getElementById('n-phone').value='';document.getElementById('n-bento').value='1';
   saveLocal();scheduleAutoSync();showToast('已新增「'+name+'」');render();
@@ -383,6 +380,12 @@ function updateStats(){
   document.getElementById('s-rpg').textContent=guests.filter(g=>g.status==='RPG'||g.status==='BSH').length;
 }
 
+function makeStatusSelect(ri,current){
+  const sc=STATUS_CLASS[current]||'ss-unknown';
+  const opts=ALL_STATUSES.map(s=>'<option value="'+s+'"'+(s===current?' selected':'')+'>'+s+'</option>').join('');
+  return '<select class="status-select '+sc+'" onchange="updateStatus('+ri+',this.value);this.className=\'status-select \'+(window.STATUS_CLASS[this.value]||\'ss-unknown\')">'+opts+'</select>';
+}
+
 function render(){
   updateStats();
   const q=document.getElementById('search').value.trim().toLowerCase();
@@ -392,11 +395,11 @@ function render(){
   const tb=document.getElementById('tbody');
   if(!list.length){tb.innerHTML='<tr><td colspan="6" class="empty">沒有符合條件的來賓</td></tr>';return;}
   tb.innerHTML=list.map(g=>{
-    const ri=g._i,sc=statusClass(g.status),isFixed=g.status==='固定缺席';
-    const canBento=['出席','職場主日','晨禱','RPG','BSH'].includes(g.status);
+    const ri=g._i,isFixed=g.status==='固定缺席';
+    const canBento=CAN_BENTO.has(g.status);
     return '<tr class="'+(isFixed?'row-fixed':'')+'">'+
       '<td><input type="text" value="'+esc(g.name)+'" onchange="updateField('+ri+',\'name\',this.value)"></td>'+
-      '<td><span class="status-badge '+sc+'" onclick="cycleStatus('+ri+')"><span class="dot"></span>'+g.status+'</span></td>'+
+      '<td>'+makeStatusSelect(ri,g.status)+'</td>'+
       '<td><input type="number" value="'+(parseInt(g.bento)||0)+'" min="0" max="20" onchange="updateField('+ri+',\'bento\',this.value)"'+(canBento?'':' disabled')+' ></td>'+
       '<td><input type="text" value="'+esc(g.note)+'" onchange="updateField('+ri+',\'note\',this.value)"></td>'+
       '<td><input type="text" value="'+esc(g.phone)+'" onchange="updateField('+ri+',\'phone\',this.value)"></td>'+
@@ -406,7 +409,6 @@ function render(){
 }
 
 function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-
 function getDate(){return document.getElementById('current-date').value.trim()||'午餐會';}
 
 function exportCSV(){
@@ -421,27 +423,16 @@ function exportCSV(){
 
 function copyText(){
   const d=getDate();
-  const coming=guests.filter(g=>g.status==='出席');
-  const asked=guests.filter(g=>g.status==='已詢問');
-  const unknown=guests.filter(g=>g.status==='待確認');
-  const absent=guests.filter(g=>g.status==='缺席');
-  const fixed=guests.filter(g=>g.status==='固定缺席');
-  const weekday=guests.filter(g=>g.status==='職場主日');
-  const morning=guests.filter(g=>g.status==='晨禱');
-  const rpg=guests.filter(g=>g.status==='RPG');
-  const bsh=guests.filter(g=>g.status==='BSH');
-  const bento=coming.reduce((a,g)=>a+(parseInt(g.bento)||0),0);
+  const g2=s=>guests.filter(g=>g.status===s);
+  const coming=g2('出席'),bento=coming.reduce((a,g)=>a+(parseInt(g.bento)||0),0);
+  const grps=[['已詢問'],['待確認'],['缺席'],['固定缺席'],['職場主日'],['晨禱'],['RPG'],['BSH']];
   let txt=d+' 午餐會來賓名單\n'+'─'.repeat(24)+'\n';
   txt+='【出席 '+coming.length+' 人 ／ 便當 '+bento+' 個】\n';
-  txt+=coming.map(g=>'• '+g.name+(g.bento>1?'（便當×'+g.bento+'）':'')+(g.note?' — '+g.note:'')).join('\n');
-  if(asked.length){txt+='\n\n【已詢問 '+asked.length+' 人】\n';txt+=asked.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(unknown.length){txt+='\n\n【待確認 '+unknown.length+' 人】\n';txt+=unknown.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(absent.length){txt+='\n\n【缺席 '+absent.length+' 人】\n';txt+=absent.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(fixed.length){txt+='\n\n【固定缺席 '+fixed.length+' 人】\n';txt+=fixed.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(weekday.length){txt+='\n\n【職場主日 '+weekday.length+' 人】\n';txt+=weekday.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(morning.length){txt+='\n\n【晨禱 '+morning.length+' 人】\n';txt+=morning.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(rpg.length){txt+='\n\n【RPG '+rpg.length+' 人】\n';txt+=rpg.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
-  if(bsh.length){txt+='\n\n【BSH '+bsh.length+' 人】\n';txt+=bsh.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
+  txt+=coming.map(g=>'• '+g.name+(parseInt(g.bento)>1?'（便當×'+g.bento+'）':'')+(g.note?' — '+g.note:'')).join('\n');
+  grps.forEach(([s])=>{
+    const list=g2(s);
+    if(list.length){txt+='\n\n【'+s+' '+list.length+' 人】\n';txt+=list.map(g=>'• '+g.name+(g.note?' — '+g.note:'')).join('\n');}
+  });
   copyToClipboard(txt);
 }
 function copyToClipboard(txt){
