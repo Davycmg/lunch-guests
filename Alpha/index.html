@@ -118,7 +118,7 @@
       <div class="logo-title" onclick="toggleSetup()" title="點此設定">⚙ 午餐會 來賓管理</div>
       <div class="logo-sub">曾獻瑩議員辦公室</div>
     </div>
-    <input type="text" class="date-input" id="current-date" value="5/22" onchange="updateDateLabel()" title="點此修改日期">
+    <input type="text" class="date-input" id="current-date" value="6/17" onchange="updateDateLabel()" title="點此修改日期">
   </div>
   <div class="header-actions">
     <span class="sync-status sync-none" id="sync-status">未連線</span>
@@ -211,7 +211,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const LOCAL_KEY='alpha-guests-v1';
+const LOCAL_KEY='alpha-guests-v3';
 const GAS_KEY='lunch-gas-url';
 const DATE_KEY='lunch-current-date';
 const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbz1fnpmkXyh9dqTvEGUbCTCkpsHrM_fMUZ6gDj8TjcZtJq7eKXFE3MXaMSsDRRR2q8H/exec';
@@ -226,36 +226,37 @@ const STATUS_CLASS={
 const CAN_BENTO=new Set(['出席','職場主日','晨禱','RPG','BSH','啟發','禱告會']);
 
 const DEFAULT_GUESTS=[
-  {name:"彥漢8872",status:"缺席",    bento:0,note:"脆皮雞",   phone:"0920-856-700"},
-  {name:"秀華",    status:"出席",    bento:1,note:"腿庫",     phone:""},
-  {name:"雅雯4997",status:"出席",    bento:1,note:"",         phone:""},
-  {name:"豪雷",    status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"天維",    status:"出席",    bento:0,note:"",         phone:""},
-  {name:"銓興哥",  status:"出席",    bento:0,note:"",         phone:""},
-  {name:"林湛",    status:"出席",    bento:1,note:"腿庫",     phone:""},
-  {name:"關崇仁",  status:"出席",    bento:1,note:"腿庫",     phone:""},
-  {name:"吉昇",    status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"莊敬",    status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"美玲",    status:"待確認",  bento:0,note:"",         phone:""},
-  {name:"佳頤",    status:"待確認",  bento:0,note:"",         phone:""},
-  {name:"冠禎",    status:"待確認",  bento:0,note:"",         phone:""},
-  {name:"宗諺",    status:"固定缺席",bento:0,note:"",         phone:""},
-  {name:"懿恬",    status:"固定缺席",bento:0,note:"",         phone:""},
-  {name:"閔翔",    status:"固定缺席",bento:0,note:"",         phone:""},
-  {name:"鴻華",    status:"固定缺席",bento:0,note:"",         phone:""},
-  {name:"政宏",    status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"黎大哥",  status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"大衛",    status:"出席",    bento:1,note:"烤魚",     phone:""},
-  {name:"麗文8815",status:"出席",    bento:1,note:"腿庫麵",   phone:""},
-  {name:"守愚",    status:"固定缺席",bento:0,note:"",         phone:""},
-  {name:"欣美姐",  status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"俊維",    status:"缺席",    bento:0,note:"隔週值班", phone:""},
-  {name:"家銘",    status:"缺席",    bento:0,note:"",         phone:""},
-  {name:"世德",    status:"固定缺席",bento:0,note:"當兵",     phone:""},
-  {name:"士斌",    status:"固定缺席",bento:0,note:"放療",     phone:""},
-  {name:"Cindy姐", status:"出席",    bento:0,note:"",         phone:""},
-  {name:"淑慧",    status:"固定缺席",bento:0,note:"",         phone:""},
-  {name:"顏志龍",  status:"出席",    bento:1,note:"烤魚",     phone:""},
+  {name:"雅雯4997",status:"出席",    bento:1,note:"海南雞",     phone:""},
+  {name:"豪雷",    status:"出席",    bento:1,note:"招牌飯",     phone:""},
+  {name:"閔翔",    status:"出席",    bento:1,note:"腿肉",       phone:""},
+  {name:"大衛",    status:"出席",    bento:1,note:"海南雞",     phone:""},
+  {name:"彥漢8872",status:"已詢問",  bento:0,note:"脆皮雞",     phone:"0920-856-700"},
+  {name:"秀華",    status:"已詢問",  bento:0,note:"海南雞",     phone:""},
+  {name:"銓興哥",  status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"林湛",    status:"已詢問",  bento:0,note:"海南雞",     phone:""},
+  {name:"吉昇",    status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"美玲",    status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"冠禎",    status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"政宏",    status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"欣美姐",  status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"Cindy姐", status:"已詢問",  bento:0,note:"海南雞",     phone:""},
+  {name:"張淑惠",  status:"已詢問",  bento:0,note:"",           phone:""},
+  {name:"佳頤",    status:"待確認",  bento:0,note:"",           phone:""},
+  {name:"天維",    status:"缺席",    bento:0,note:"",           phone:""},
+  {name:"關崇仁",  status:"缺席",    bento:0,note:"海南雞",     phone:""},
+  {name:"莊敬",    status:"缺席",    bento:0,note:"",           phone:""},
+  {name:"黎大哥",  status:"缺席",    bento:0,note:"",           phone:""},
+  {name:"麗文8815",status:"缺席",    bento:0,note:"脆皮雞",     phone:""},
+  {name:"俊維",    status:"缺席",    bento:0,note:"",           phone:""},
+  {name:"家銘",    status:"缺席",    bento:0,note:"",           phone:""},
+  {name:"顏志龍",  status:"缺席",    bento:0,note:"烤魚",       phone:""},
+  {name:"宗諺",    status:"固定缺席",bento:0,note:"",           phone:""},
+  {name:"懿恬",    status:"固定缺席",bento:0,note:"",           phone:""},
+  {name:"鴻華",    status:"固定缺席",bento:0,note:"",           phone:""},
+  {name:"守愚",    status:"固定缺席",bento:0,note:"",           phone:""},
+  {name:"世德",    status:"固定缺席",bento:0,note:"當兵",       phone:""},
+  {name:"士斌",    status:"固定缺席",bento:0,note:"放療",       phone:""},
+  {name:"淑慧",    status:"固定缺席",bento:0,note:"",           phone:""},
 ];
 
 let guests=[],curFilter='all',gasUrl='';
@@ -310,10 +311,15 @@ async function syncFromSheet(silent=false){
       setSyncStatus('ok','✓ 已同步');
       if(!silent)showToast('載入成功，共 '+guests.length+' 人');
     }else{
-      loadLocal();render();setSyncStatus('ok','雲端無資料');
-      if(!silent)showToast('雲端目前沒有資料');
+      loadLocal();render();
+      setSyncStatus('none','雲端無資料');
+      if(!silent)showToast('雲端目前沒有資料，顯示本機版本');
     }
-  }catch(e){loadLocal();render();setSyncStatus('err','同步失敗');if(!silent)showToast('載入失敗');}
+  }catch(e){
+    loadLocal();render();
+    setSyncStatus('err','同步失敗');
+    if(!silent)showToast('載入失敗，請檢查網路或 GAS 設定');
+  }
 }
 
 function loadLocal(){
@@ -327,7 +333,7 @@ async function syncToSheet(silent=false){
   try{
     const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'write',guests})});
     const data=await res.json();
-    if(data.ok){setSyncStatus('ok','✓ 已同步');if(!silent)showToast('已儲存（'+data.count+' 人）');}
+    if(data.ok){setSyncStatus('ok','✓ 已同步 '+data.count+' 人');if(!silent)showToast('已儲存到雲端（'+data.count+' 人）');}
     else throw new Error(data.error);
   }catch(e){setSyncStatus('err','同步失敗');if(!silent)showToast('儲存失敗：'+e.message);}
 }
