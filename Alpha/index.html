@@ -211,7 +211,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const LOCAL_KEY='alpha-guests-v3';
+const LOCAL_KEY='alpha-guests-v4';
 const GAS_KEY='lunch-gas-url';
 const DATE_KEY='lunch-current-date';
 const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbz1fnpmkXyh9dqTvEGUbCTCkpsHrM_fMUZ6gDj8TjcZtJq7eKXFE3MXaMSsDRRR2q8H/exec';
@@ -274,6 +274,7 @@ function updateDateLabel(){
   const d=document.getElementById('current-date').value.trim();
   localStorage.setItem(DATE_KEY,d);
   document.getElementById('th-status').textContent=d+' 狀態';
+  scheduleAutoSync();
 }
 
 function saveLocal(){try{localStorage.setItem(LOCAL_KEY,JSON.stringify(guests));}catch(e){}}
@@ -308,6 +309,11 @@ async function syncFromSheet(silent=false){
     const data=await res.json();
     if(data.ok&&data.guests.length>0){
       guests=data.guests;saveLocal();render();
+      if(data.date){
+        document.getElementById('current-date').value=data.date;
+        localStorage.setItem(DATE_KEY,data.date);
+        updateDateLabel();
+      }
       setSyncStatus('ok','✓ 已同步');
       if(!silent)showToast('載入成功，共 '+guests.length+' 人');
     }else{
@@ -331,7 +337,7 @@ async function syncToSheet(silent=false){
   if(!gasUrl){if(!silent)showToast('請先設定 GAS 網址');return;}
   setSyncStatus('ing','同步中...');
   try{
-    const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'write',guests})});
+    const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'write',guests,date:document.getElementById('current-date').value})});
     const data=await res.json();
     if(data.ok){setSyncStatus('ok','✓ 已同步 '+data.count+' 人');if(!silent)showToast('已儲存到雲端（'+data.count+' 人）');}
     else throw new Error(data.error);
