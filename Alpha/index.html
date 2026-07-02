@@ -211,10 +211,10 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const LOCAL_KEY='alpha-guests-v4';
+const LOCAL_KEY='alpha-guests-v6';
 const GAS_KEY='lunch-gas-url';
 const DATE_KEY='lunch-current-date';
-const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbz1fnpmkXyh9dqTvEGUbCTCkpsHrM_fMUZ6gDj8TjcZtJq7eKXFE3MXaMSsDRRR2q8H/exec';
+const HARDCODED_GAS_URL='https://script.google.com/macros/s/AKfycbz4EswLSs-EzTTSRO33emVnfla5URZhJt0CCb6ORknfmYNZPXxZe7qEVr1ckRy2rLrkOQ/exec';
 
 const ALL_STATUSES=['出席','缺席','待確認','已詢問','固定缺席','職場主日','晨禱','RPG','BSH','啟發','禱告會'];
 
@@ -301,19 +301,21 @@ function setSyncStatus(type,msg){
   el.className='sync-status sync-'+type;el.textContent=msg;
 }
 
+/* ---- 穩定同步機制：單一 JSON 儲存格，doGet 直接回傳、doPost 直接覆寫 ---- */
 async function syncFromSheet(silent=false){
   if(!gasUrl){if(!silent)showToast('請先設定 GAS 網址');return;}
   setSyncStatus('ing','載入中...');
   try{
-    const res=await fetch(gasUrl+'?action=read');
+    const res=await fetch(gasUrl,{cache:'no-store'});
     const data=await res.json();
-    if(data.ok&&data.guests.length>0){
-      guests=data.guests;saveLocal();render();
+    if(data && Array.isArray(data.guests) && data.guests.length>0){
+      guests=data.guests;saveLocal();
       if(data.date){
         document.getElementById('current-date').value=data.date;
         localStorage.setItem(DATE_KEY,data.date);
-        updateDateLabel();
       }
+      render();
+      updateDateLabelSilent();
       setSyncStatus('ok','✓ 已同步');
       if(!silent)showToast('載入成功，共 '+guests.length+' 人');
     }else{
@@ -328,6 +330,11 @@ async function syncFromSheet(silent=false){
   }
 }
 
+function updateDateLabelSilent(){
+  const d=document.getElementById('current-date').value.trim();
+  document.getElementById('th-status').textContent=d+' 狀態';
+}
+
 function loadLocal(){
   try{const s=localStorage.getItem(LOCAL_KEY);guests=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
   catch(e){guests=JSON.parse(JSON.stringify(DEFAULT_GUESTS));}
@@ -337,12 +344,24 @@ async function syncToSheet(silent=false){
   if(!gasUrl){if(!silent)showToast('請先設定 GAS 網址');return;}
   setSyncStatus('ing','同步中...');
   try{
-    const res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'write',guests,date:document.getElementById('current-date').value})});
+    const res=await fetch(gasUrl,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({guests,date:document.getElementById('current-date').value})
+    });
     const data=await res.json();
-    if(data.ok){setSyncStatus('ok','✓ 已同步 '+data.count+' 人');if(!silent)showToast('已儲存到雲端（'+data.count+' 人）');}
-    else throw new Error(data.error);
-  }catch(e){setSyncStatus('err','同步失敗');if(!silent)showToast('儲存失敗：'+e.message);}
+    if(data && data.ok){
+      setSyncStatus('ok','✓ 已同步 '+guests.length+' 人');
+      if(!silent)showToast('已儲存到雲端（'+guests.length+' 人）');
+    }else{
+      throw new Error('後端未回傳 ok');
+    }
+  }catch(e){
+    setSyncStatus('err','同步失敗');
+    if(!silent)showToast('儲存失敗：'+e.message);
+  }
 }
+/* ---- 同步機制結束 ---- */
 
 function updateStatus(i,val){
   guests[i].status=val;
